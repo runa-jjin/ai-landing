@@ -33,6 +33,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
     }),
   ] : [],
+  trustHost: true, // Vercel 배포 시 필수
   pages: {
     signIn: '/auth/signin',
     error: '/auth/signin', // 에러 발생 시 로그인 페이지로 리디렉션
