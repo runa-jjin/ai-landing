@@ -136,8 +136,11 @@ export async function resetUserUsage(userId: string): Promise<void> {
 export async function getUserPlan(userId: string): Promise<string> {
   try {
     if (!supabaseAdmin) {
+      console.log('[user-usage] ⚠️ Supabase not initialized');
       return 'free';
     }
+
+    console.log('[user-usage] 🔍 Fetching plan for userId:', userId);
 
     const { data, error } = await supabaseAdmin
       .from('user_usage')
@@ -145,13 +148,20 @@ export async function getUserPlan(userId: string): Promise<string> {
       .eq('user_id', userId)
       .maybeSingle();
 
-    if (error || !data) {
+    if (error) {
+      console.error('[user-usage] ❌ Error fetching plan:', error);
       return 'free';
     }
 
+    if (!data) {
+      console.log('[user-usage] ⚠️ No data found for userId:', userId);
+      return 'free';
+    }
+
+    console.log('[user-usage] ✅ Plan type found:', data.plan_type);
     return data.plan_type || 'free';
   } catch (error) {
-    console.error('[user-usage] Exception in getUserPlan:', error);
+    console.error('[user-usage] ❌ Exception in getUserPlan:', error);
     return 'free';
   }
 }
