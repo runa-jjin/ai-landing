@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/auth";
-import { getUserUsage, getRemainingUsage, USAGE_LIMIT, canUserGenerate } from "@/lib/user-usage";
+import { getUserUsage, getRemainingUsage, USAGE_LIMIT, canUserGenerate, getUserPlan } from "@/lib/user-usage";
 
 export async function getUsageInfo() {
   const session = await auth();
@@ -13,12 +13,14 @@ export async function getUsageInfo() {
       remaining: USAGE_LIMIT,
       limit: USAGE_LIMIT,
       canGenerate: false,
+      planType: 'free' as const,
     };
   }
 
   const used = await getUserUsage(session.user.id);
   const remaining = await getRemainingUsage(session.user.id);
   const canGenerate = await canUserGenerate(session.user.id);
+  const planType = await getUserPlan(session.user.id);
 
   return {
     isAuthenticated: true,
@@ -26,6 +28,7 @@ export async function getUsageInfo() {
     remaining,
     limit: USAGE_LIMIT,
     canGenerate,
+    planType,
   };
 }
 

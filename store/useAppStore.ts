@@ -11,6 +11,7 @@ interface AppState {
   result: CopyOutput | null;
   isGenerating: boolean;
   usageCount: number;
+  planType: string;
   error: string | null;
   activeTab: TabKey;
   isPaywallOpen: boolean;
@@ -19,6 +20,7 @@ interface AppState {
   setResult: (value: CopyOutput | null) => void;
   setIsGenerating: (value: boolean) => void;
   incrementUsage: () => void;
+  setPlanType: (value: string) => void;
   setError: (value: string | null) => void;
   setActiveTab: (tab: TabKey) => void; 
   setPaywallOpen: (value: boolean) => void;
@@ -43,6 +45,7 @@ export const useAppStore = create<AppState>()(
       result: null,
       isGenerating: false,
       usageCount: 0,
+      planType: 'free',
       error: null,
       activeTab: "result",
       isPaywallOpen: false,
@@ -57,6 +60,7 @@ export const useAppStore = create<AppState>()(
       setResult: (value) => set({ result: value }),
       setIsGenerating: (value) => set({ isGenerating: value }),
       incrementUsage: () => set((state) => ({ usageCount: state.usageCount + 1 })),
+      setPlanType: (value) => set({ planType: value }),
       setError: (value) => set({ error: value }),
       setActiveTab: (tab) => set({ activeTab: tab }), 
       setPaywallOpen: (value) => set({ isPaywallOpen: value }),
@@ -64,7 +68,7 @@ export const useAppStore = create<AppState>()(
     }),
     {
       name: "app-store",
-      partialize: (state) => ({ usageCount: state.usageCount, form: state.form })
+      partialize: (state) => ({ usageCount: state.usageCount, planType: state.planType, form: state.form })
     }
   )
 );

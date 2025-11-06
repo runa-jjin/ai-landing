@@ -49,7 +49,8 @@ export function Form() {
     setError,
     setActiveTab,
     isGenerating,
-    setPaywallOpen
+    setPaywallOpen,
+    setPlanType
   } = useAppStore();
   const [isPending, startTransition] = useTransition();
   const [usageInfo, setUsageInfo] = useState({
@@ -58,17 +59,22 @@ export function Form() {
     remaining: 3,
     limit: 3,
     canGenerate: false,
+    planType: 'free' as string,
   });
 
   // 사용량 정보 로드
   useEffect(() => {
-    getUsageInfo().then(setUsageInfo);
-  }, []);
+    getUsageInfo().then((info) => {
+      setUsageInfo(info);
+      setPlanType(info.planType);
+    });
+  }, [setPlanType]);
 
   // 생성 후 사용량 새로고침
   const refreshUsage = async () => {
     const info = await getUsageInfo();
     setUsageInfo(info);
+    setPlanType(info.planType);
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {

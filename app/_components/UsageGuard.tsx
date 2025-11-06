@@ -12,9 +12,11 @@ type UsageGuardProps = {
 const paymentUrl = process.env.NEXT_PUBLIC_PAYMENT_URL ?? "https://qr.kakaopay.com/FaHneA0xp251c06091";
 
 export function UsageGuard({ children }: UsageGuardProps) {
-  const { usageCount, isPaywallOpen, setPaywallOpen } = useAppStore();
+  const { usageCount, planType, isPaywallOpen, setPaywallOpen } = useAppStore();
 
-  const blocked = usageCount >= USAGE_LIMIT;
+  // Pro 플랜은 제한 없음
+  const isPro = planType === 'pro';
+  const blocked = !isPro && usageCount >= USAGE_LIMIT;
   const remaining = Math.max(0, USAGE_LIMIT - usageCount);
 
   const modal =
@@ -73,8 +75,11 @@ export function UsageGuard({ children }: UsageGuardProps) {
         openPaywall: () => setPaywallOpen(true)
       })}
       {modal}
-      {!blocked && remaining <= 1 && (
+      {!isPro && !blocked && remaining <= 1 && (
         <p className="text-right text-xs text-amber-400">무료 이용이 {remaining}회 남았습니다.</p>
+      )}
+      {isPro && (
+        <p className="text-right text-xs text-yellow-400">✨ Pro 플랜 (무제한)</p>
       )}
     </>
   );

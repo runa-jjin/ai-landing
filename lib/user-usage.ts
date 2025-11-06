@@ -91,8 +91,16 @@ export async function incrementUserUsage(userId: string): Promise<number> {
   }
 }
 
-// 사용 가능 여부 확인
+// 사용 가능 여부 확인 (Pro 플랜은 무제한)
 export async function canUserGenerate(userId: string): Promise<boolean> {
+  const plan = await getUserPlan(userId);
+  
+  // Pro 플랜은 무제한
+  if (plan === 'pro') {
+    return true;
+  }
+  
+  // Free 플랜은 제한 적용
   const usage = await getUserUsage(userId);
   return usage < USAGE_LIMIT;
 }
