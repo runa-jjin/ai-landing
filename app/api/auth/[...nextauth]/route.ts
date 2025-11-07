@@ -2,6 +2,12 @@ import { handlers } from "@/auth"
 import { NextRequest, NextResponse } from "next/server"
 
 // NextAuth handlers를 래핑하여 에러 정보를 URL에 포함
+// handlers가 제대로 초기화되었는지 확인
+if (!handlers) {
+  console.error('[auth] ❌ CRITICAL: NextAuth handlers are not initialized!')
+  throw new Error('NextAuth handlers are not initialized. Check AUTH_SECRET and providers configuration.')
+}
+
 const originalHandlers = handlers
 
 export async function GET(request: NextRequest) {

@@ -343,13 +343,17 @@ if (!AUTH_SECRET) {
   throw new Error('AUTH_SECRET environment variable is required');
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+// NextAuth 설정 객체 생성
+const nextAuthConfig: any = {
   providers,
   pages: {
     signIn: '/auth/signin',
     error: '/auth/signin', // 에러 발생 시 로그인 페이지로 리디렉션 (에러 타입은 쿼리 파라미터로 자동 전달됨)
   },
   debug: process.env.NODE_ENV === 'development', // 개발 환경에서만 디버그 모드 활성화
+  secret: AUTH_SECRET,
+  // Vercel 배포 시 호스트 신뢰 설정 (NextAuth v5)
+  trustHost: true,
   callbacks: {
     async signIn({ user, account, profile }: { user: any; account?: any; profile?: any }) {
       try {
@@ -457,10 +461,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-  secret: AUTH_SECRET,
-  // Vercel 배포 시 호스트 신뢰 설정 (NextAuth v5)
-  trustHost: true,
-  // NEXTAUTH_URL이 없으면 자동으로 감지하지만, 명시적으로 설정하는 것이 좋습니다
-  ...(NEXTAUTH_URL ? { basePath: undefined } : {}), // basePath는 자동 감지
-})
+}
+
+// NEXTAUTH_URL이 있으면 baseURL 설정
+if (NEXTAUTH_URL) {
+  nextAuthConfig.baseURL = NEXTAUTH_URL;
+}
+
+// 최종 설정 로그
+console.log('[auth] NextAuth final configuration:', {
+  hasSecret: !!nextAuthConfig.secret,
+  secretLength: nextAuthConfig.secret?.length || 0,
+  providersCount: nextAuthConfig.providers?.length || 0,
+  hasBaseURL: !!nextAuthConfig.baseURL,
+  baseURL: nextAuthConfig.baseURL,
+  trustHost: nextAuthConfig.trustHost
+});
+
+// NextAuth 초기화
+export const { handlers, signIn, signOut, auth } = NextAuth(nextAuthConfig)
 
