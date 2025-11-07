@@ -78,16 +78,51 @@ function SignInContent() {
             소셜 계정으로 간편하게 로그인하세요
           </p>
           {error && (
-            <div className="mt-4 rounded-lg bg-rose-500/10 border border-rose-500/50 px-4 py-3 text-sm text-rose-200 space-y-1">
+            <div className="mt-4 rounded-lg bg-rose-500/10 border border-rose-500/50 px-4 py-3 text-sm text-rose-200 space-y-2">
               <div className="font-semibold">로그인 중 오류가 발생했습니다</div>
-              <div className="text-xs opacity-90">
-                <div>에러 타입: {error}</div>
-                {errorCode && <div>에러 코드: {errorCode}</div>}
-                {errorDescription && (
-                  <div className="mt-1 break-words">상세: {decodeURIComponent(errorDescription)}</div>
+              <div className="text-xs opacity-90 space-y-1">
+                <div>에러 타입: <span className="font-mono">{error}</span></div>
+                {errorCode && (
+                  <div className="font-semibold text-rose-300">
+                    카카오 에러 코드: <span className="font-mono">{errorCode}</span>
+                  </div>
                 )}
-                {provider && <div>프로바이더: {provider}</div>}
+                {errorDescription && (
+                  <div className="mt-1 break-words">
+                    <span className="font-semibold">에러 설명:</span> {decodeURIComponent(errorDescription)}
+                  </div>
+                )}
+                {provider && (
+                  <div className="text-rose-300">
+                    프로바이더: <span className="font-mono">{provider}</span>
+                  </div>
+                )}
               </div>
+              {error === "Configuration" && (
+                <div className="mt-3 pt-3 border-t border-rose-500/30 text-xs space-y-1">
+                  <div className="font-semibold text-rose-300">Configuration 에러 해결 방법:</div>
+                  <ul className="list-disc list-inside space-y-1 text-rose-200/80">
+                    <li>AUTH_SECRET 환경 변수가 설정되어 있는지 확인</li>
+                    <li>최소 하나의 OAuth Provider (Google 또는 Kakao)가 설정되어 있는지 확인</li>
+                    <li>Vercel 환경 변수 설정에서 Production, Preview, Development 모두 체크</li>
+                    <li>환경 변수 변경 후 재배포 필요</li>
+                  </ul>
+                </div>
+              )}
+              {provider === "kakao" && errorCode && (
+                <div className="mt-3 pt-3 border-t border-rose-500/30 text-xs space-y-1">
+                  <div className="font-semibold text-rose-300">카카오 OAuth 에러 정보:</div>
+                  <div className="text-rose-200/80 space-y-1">
+                    <div>에러 코드: <span className="font-mono">{errorCode}</span></div>
+                    {errorDescription && (
+                      <div className="break-words">설명: {decodeURIComponent(errorDescription)}</div>
+                    )}
+                    <div className="mt-2 text-rose-300/80">
+                      카카오 개발자 콘솔에서 이 에러 코드를 확인하여 원인을 파악하세요.
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

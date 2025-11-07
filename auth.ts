@@ -75,7 +75,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       params: {
         scope: "profile_nickname profile_image account_email",  // 카카오 동의항목: profile이 profile_nickname과 profile_image로 분리됨
         response_type: "code",
-        client_id: clientId, // 명시적으로 client_id 추가
+        // client_id는 NextAuth v5가 자동으로 client.id에서 가져오므로 명시적으로 추가하지 않음
       },
     },
     token: {
@@ -140,12 +140,35 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
               full_response: errorText
             });
 
-            // 카카오 에러 정보를 포함한 에러 메시지 생성
+            // 카카오 에러 정보를 NextAuth가 URL로 전달할 수 있도록 특별한 형식으로 에러 생성
             const errorMessage = errorData.error_description || errorData.error || `HTTP ${response.status}`;
-            const error = new Error(`Kakao OAuth Error: ${errorMessage}`);
-            (error as any).code = errorData.error;
-            (error as any).description = errorData.error_description;
-            (error as any).status = response.status;
+            
+            // NextAuth v5가 에러를 처리할 때 URL에 포함시킬 수 있도록 에러 메시지에 정보 포함
+            // 에러 메시지 자체에 정보를 포함시켜서 나중에 파싱할 수 있도록 함
+            const errorInfo = {
+              type: 'OAuthCallback',
+              provider: 'kakao',
+              code: errorData.error || 'kakao_oauth_error',
+              description: errorData.error_description || errorMessage,
+              status: response.status,
+              error_code: errorData.error_code,
+              raw: errorData
+            };
+            
+            console.error('[auth] Kakao error occurred, storing in error message:', errorInfo);
+            
+            // 에러 메시지에 정보를 포함시켜서 나중에 파싱 가능하도록
+            // Base64로 인코딩하여 URL-safe하게 만듦
+            const errorDataBase64 = Buffer.from(JSON.stringify(errorInfo)).toString('base64');
+            const error = new Error(`KAKAO_ERROR:${errorDataBase64}`) as any;
+            error.type = 'OAuthCallback';
+            error.provider = 'kakao';
+            error.code = errorInfo.code;
+            error.description = errorInfo.description;
+            error.status = errorInfo.status;
+            error.error_code = errorInfo.error_code;
+            error.raw = errorInfo.raw;
+            
             throw error;
           }
 
@@ -179,13 +202,33 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
 
           if (!response.ok) {
             const errorText = await response.text();
+            let errorData: any = {};
+            
+            try {
+              errorData = JSON.parse(errorText);
+            } catch {
+              errorData = { error_description: errorText };
+            }
+            
             console.error('[auth] Kakao userinfo error:', {
               status: response.status,
               statusText: response.statusText,
-              error: errorText,
+              error: errorData.error || errorData.error_description || errorText,
+              error_code: errorData.error_code,
               access_token_preview: tokens.access_token?.substring(0, 20) + '...'
             });
-            throw new Error(`Kakao userinfo request failed: ${response.status} ${errorText}`);
+            
+            // 카카오 userinfo 에러도 동일한 형식으로 전달
+            const error = new Error(`Kakao userinfo request failed: ${response.status}`) as any;
+            error.type = 'OAuthCallback';
+            error.provider = 'kakao';
+            error.code = errorData.error || 'kakao_userinfo_error';
+            error.description = errorData.error_description || errorData.error || errorText;
+            error.status = response.status;
+            error.error_code = errorData.error_code;
+            error.raw = errorData;
+            
+            throw error;
           }
 
           const profile = await response.json();
@@ -235,7 +278,11 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
 
 // NextAuth 설정 전에 환경 변수 재확인
 if (!AUTH_SECRET) {
-  console.error('[auth] ❌ CRITICAL: AUTH_SECRET is required for NextAuth');
+  const errorMsg = '[auth] ❌ CRITICAL: AUTH_SECRET is required for NextAuth. Configuration error will occur.';
+  console.error(errorMsg);
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('AUTH_SECRET environment variable is required for NextAuth');
+  }
 }
 
 const providers = [
@@ -269,6 +316,22 @@ const providers = [
 
 console.log('[auth] NextAuth providers count:', providers.length);
 console.log('[auth] Provider IDs:', providers.map(p => p.id));
+
+// NextAuth v5에서는 providers가 비어있으면 Configuration 에러 발생
+if (providers.length === 0) {
+  const errorMsg = '[auth] ❌ CRITICAL: No OAuth providers configured. At least one provider (Google or Kakao) is required.';
+  console.error(errorMsg);
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('At least one OAuth provider must be configured. Please set AUTH_GOOGLE_ID/AUTH_GOOGLE_SECRET or AUTH_KAKAO_ID/AUTH_KAKAO_SECRET');
+  }
+}
+
+// AUTH_SECRET이 없으면 NextAuth 설정 실패
+if (!AUTH_SECRET) {
+  const errorMsg = '[auth] ❌ CRITICAL: AUTH_SECRET is missing. NextAuth cannot be initialized.';
+  console.error(errorMsg);
+  throw new Error('AUTH_SECRET environment variable is required');
+}
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers,
@@ -384,7 +447,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-  secret: AUTH_SECRET || process.env.AUTH_SECRET,
+  secret: AUTH_SECRET,
   // NEXTAUTH_URL이 없으면 자동으로 감지하지만, 명시적으로 설정하는 것이 좋습니다
   ...(NEXTAUTH_URL ? { basePath: undefined } : {}), // basePath는 자동 감지
 })
