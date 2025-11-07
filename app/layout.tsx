@@ -28,28 +28,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko"> 
       <head>
-        {/* Google AdSense - 클라이언트에서 동적으로 추가하여 data-nscript 속성 방지 */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function() {
-                // 기존 스크립트 제거 (있다면)
-                const existing = document.querySelector('script[src*="adsbygoogle"]');
-                if (existing) {
-                  existing.remove();
-                }
-                
-                // 새로운 스크립트 동적 생성 (Next.js가 수정하지 않도록)
-                const script = document.createElement('script');
-                script.async = true;
-                script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8630393397499631';
-                script.crossOrigin = 'anonymous';
-                document.head.appendChild(script);
-              })();
-            `,
-          }}
-          suppressHydrationWarning
-        />
+        {/* Google AdSense */}
+        <meta name="google-adsense-account" content="ca-pub-5471299059563255" />
         
         {/* 카카오 애드핏 */}
         {kakaoAdFitKey && (
