@@ -1,6 +1,6 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
-import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers/oauth"
+import type { OAuthConfig, OAuthUserConfig } from "@auth/core/providers/oauth"
 import { supabaseAdmin } from "./lib/supabase"
 
 // 환경 변수 검증 및 에러 처리
@@ -278,7 +278,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   debug: process.env.NODE_ENV === 'development', // 개발 환경에서만 디버그 모드 활성화
   callbacks: {
-    async signIn({ user, account, profile }: { user: any; account: any; profile?: any }) {
+    async signIn({ user, account, profile }: { user: any; account?: any; profile?: any }) {
       try {
         console.log('[auth] Sign in callback triggered:', { 
           userId: user.id, 
