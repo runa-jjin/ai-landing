@@ -1,6 +1,7 @@
 import NextAuth from "next-auth"
+import { getServerSession } from "next-auth/next"
 import GoogleProvider from "next-auth/providers/google"
-import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers"
+import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers/oauth"
 import { supabaseAdmin } from "./lib/supabase"
 
 // 환경 변수 검증 및 에러 처리
@@ -304,5 +305,10 @@ export const authOptions = {
   secret: AUTH_SECRET || process.env.AUTH_SECRET,
   // Vercel 배포 시 useSecureCookies 자동 감지
   useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? false,
+}
+
+// NextAuth v4에서 getServerSession을 사용하기 위한 헬퍼 함수
+export async function auth() {
+  return await getServerSession(authOptions)
 }
 
