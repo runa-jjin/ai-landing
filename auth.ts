@@ -73,8 +73,9 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
-        // 카카오 OAuth scope는 공백으로 구분 (NextAuth가 자동으로 URL 인코딩)
-        scope: "profile_nickname profile_image account_email",
+        // 카카오 OAuth scope: account_email은 권한이 없으면 제거해야 함
+        // 권한이 있는 동의항목만 사용: profile_nickname (필수), profile_image (선택)
+        scope: "profile_nickname profile_image",
         response_type: "code",
         // client_id는 NextAuth v5가 자동으로 client.id에서 가져오므로 명시적으로 추가하지 않음
       },
