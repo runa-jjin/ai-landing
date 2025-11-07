@@ -11,21 +11,26 @@ function SignInContent() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const error = searchParams.get("error");
 
-  // 에러가 있는 경우 표시
-  useEffect(() => {
-    if (error) {
-      console.error("[signin] Auth error:", error);
-    }
-  }, [error]);
-
   // 로그인 성공 시 자동 리디렉션
   useEffect(() => {
     if (status === "authenticated" && session) {
       console.log("[signin] User authenticated, redirecting to:", callbackUrl);
-      router.push(callbackUrl);
-      router.refresh(); // 세션 상태 새로고침
+      // 약간의 지연을 두고 리디렉션하여 세션이 완전히 설정되도록 함
+      setTimeout(() => {
+        router.push(callbackUrl);
+        router.refresh();
+      }, 100);
     }
   }, [status, session, callbackUrl, router]);
+
+  // URL에 에러가 있는 경우 확인
+  useEffect(() => {
+    if (error) {
+      console.error("[signin] Auth error from URL:", error);
+    }
+    // 세션 상태 확인
+    console.log("[signin] Session status:", status, "Has session:", !!session);
+  }, [error, status, session]);
 
   const handleSignIn = async (provider: string) => {
     try {
