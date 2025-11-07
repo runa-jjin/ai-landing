@@ -41,7 +41,26 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
         response_type: "code",
       },
     },
-    token: "https://kauth.kakao.com/oauth/token",
+    token: {
+      url: "https://kauth.kakao.com/oauth/token",
+      async request(context: any) {
+        const { provider, params, client } = context;
+        const response = await fetch(provider.token?.url as string, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({
+            grant_type: "authorization_code",
+            client_id: client.id,
+            client_secret: client.secret,
+            code: params.code as string,
+            redirect_uri: params.redirect_uri as string,
+          }),
+        });
+        return { tokens: await response.json() };
+      },
+    },
     userinfo: "https://kapi.kakao.com/v2/user/me",
     client: {
       id: options.clientId!,
