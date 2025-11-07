@@ -16,24 +16,27 @@ export async function GET(request: NextRequest) {
         const errorParam = errorUrl.searchParams.get('error')
         const requestUrl = new URL(request.url)
         
-        // Kakao callback 경로에서 발생한 모든 에러 처리
-        if (requestUrl.pathname.includes('/callback/kakao')) {
-          console.error('[auth] Kakao callback error detected:', {
-            error: errorParam,
+        // Configuration 에러인 경우 처리
+        if (errorParam === 'Configuration') {
+          console.error('[auth] Configuration error detected:', {
             pathname: requestUrl.pathname,
-            search: requestUrl.search
+            search: requestUrl.search,
+            fullUrl: requestUrl.href
           })
           
-          // Configuration 에러이거나 에러 정보가 없는 경우 실제 Kakao 에러로 교체
-          if (errorParam === 'Configuration' || !errorParam) {
+          // Kakao 관련 경로인 경우 실제 에러 정보로 교체
+          if (requestUrl.pathname.includes('/callback/kakao') || 
+              requestUrl.pathname.includes('/signin/kakao') ||
+              requestUrl.search.includes('kakao')) {
             // 서버 로그에서 본 실제 에러 정보 사용
             errorUrl.searchParams.set('error', 'invalid_client')
             errorUrl.searchParams.set('error_description', encodeURIComponent('Not exist client_id [null]'))
             errorUrl.searchParams.set('provider', 'kakao')
             
-            console.error('[auth] Replacing error with Kakao error info:', {
+            console.error('[auth] Replacing Configuration error with Kakao error info:', {
               original: errorParam,
-              new: 'invalid_client'
+              new: 'invalid_client',
+              pathname: requestUrl.pathname
             })
             
             return NextResponse.redirect(errorUrl)
@@ -117,23 +120,26 @@ export async function POST(request: NextRequest) {
         const errorParam = errorUrl.searchParams.get('error')
         const requestUrl = new URL(request.url)
         
-        // Kakao callback 경로에서 발생한 모든 에러 처리
-        if (requestUrl.pathname.includes('/callback/kakao')) {
-          console.error('[auth] Kakao callback error detected in POST:', {
-            error: errorParam,
+        // Configuration 에러인 경우 처리
+        if (errorParam === 'Configuration') {
+          console.error('[auth] Configuration error detected in POST:', {
             pathname: requestUrl.pathname,
-            search: requestUrl.search
+            search: requestUrl.search,
+            fullUrl: requestUrl.href
           })
           
-          // Configuration 에러이거나 에러 정보가 없는 경우 실제 Kakao 에러로 교체
-          if (errorParam === 'Configuration' || !errorParam) {
+          // Kakao 관련 경로인 경우 실제 에러 정보로 교체
+          if (requestUrl.pathname.includes('/callback/kakao') || 
+              requestUrl.pathname.includes('/signin/kakao') ||
+              requestUrl.search.includes('kakao')) {
             errorUrl.searchParams.set('error', 'invalid_client')
             errorUrl.searchParams.set('error_description', encodeURIComponent('Not exist client_id [null]'))
             errorUrl.searchParams.set('provider', 'kakao')
             
-            console.error('[auth] Replacing error with Kakao error info in POST:', {
+            console.error('[auth] Replacing Configuration error with Kakao error info in POST:', {
               original: errorParam,
-              new: 'invalid_client'
+              new: 'invalid_client',
+              pathname: requestUrl.pathname
             })
             
             return NextResponse.redirect(errorUrl)

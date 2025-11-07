@@ -318,6 +318,14 @@ const providers = [
 
 console.log('[auth] NextAuth providers count:', providers.length);
 console.log('[auth] Provider IDs:', providers.map(p => p.id));
+console.log('[auth] NextAuth configuration check:', {
+  hasSecret: !!AUTH_SECRET,
+  secretLength: AUTH_SECRET?.length || 0,
+  providersCount: providers.length,
+  hasGoogle: providers.some(p => p.id === 'google'),
+  hasKakao: providers.some(p => p.id === 'kakao'),
+  nextAuthUrl: NEXTAUTH_URL
+});
 
 // NextAuth v5에서는 providers가 비어있으면 Configuration 에러 발생
 if (providers.length === 0) {
