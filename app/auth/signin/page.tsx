@@ -85,7 +85,7 @@ function SignInContent() {
                 <div>에러 타입: <span className="font-mono">{error}</span></div>
                 {errorCode && (
                   <div className="font-semibold text-rose-300">
-                    카카오 에러 코드: <span className="font-mono">{errorCode}</span>
+                    에러 코드: <span className="font-mono">{errorCode}</span>
                   </div>
                 )}
                 {errorDescription && (
@@ -114,8 +114,6 @@ function SignInContent() {
                             <div>AUTH_SECRET: {status.hasAuthSecret ? `✅ 설정됨 (길이: ${status.authSecretLength})` : '❌ 없음'}</div>
                             <div>Google ID: {status.hasGoogleId ? '✅' : '❌'}</div>
                             <div>Google Secret: {status.hasGoogleSecret ? '✅' : '❌'}</div>
-                            <div>Kakao ID: {status.hasKakaoId ? '✅' : '❌'}</div>
-                            <div>Kakao Secret: {status.hasKakaoSecret ? '✅' : '❌'}</div>
                             <div>NEXTAUTH_URL: {status.hasNextAuthUrl ? '✅' : '⚠️ 선택사항'}</div>
                             <div>NODE_ENV: {status.nodeEnv || 'N/A'}</div>
                           </div>
@@ -127,25 +125,11 @@ function SignInContent() {
                   })()}
                   <ul className="list-disc list-inside space-y-1 text-rose-200/80 mt-2">
                     <li>AUTH_SECRET 환경 변수가 설정되어 있는지 확인</li>
-                    <li>최소 하나의 OAuth Provider (Google 또는 Kakao)가 설정되어 있는지 확인</li>
+                    <li>Google OAuth Provider가 설정되어 있는지 확인</li>
                     <li>Vercel 환경 변수 설정에서 Production, Preview, Development 모두 체크</li>
                     <li>환경 변수 변경 후 재배포 필요</li>
                     <li>Vercel 대시보드 → Settings → Environment Variables에서 확인</li>
                   </ul>
-                </div>
-              )}
-              {provider === "kakao" && errorCode && (
-                <div className="mt-3 pt-3 border-t border-rose-500/30 text-xs space-y-1">
-                  <div className="font-semibold text-rose-300">카카오 OAuth 에러 정보:</div>
-                  <div className="text-rose-200/80 space-y-1">
-                    <div>에러 코드: <span className="font-mono">{errorCode}</span></div>
-                    {errorDescription && (
-                      <div className="break-words">설명: {decodeURIComponent(errorDescription)}</div>
-                    )}
-                    <div className="mt-2 text-rose-300/80">
-                      카카오 개발자 콘솔에서 이 에러 코드를 확인하여 원인을 파악하세요.
-                    </div>
-                  </div>
                 </div>
               )}
             </div>
@@ -167,16 +151,6 @@ function SignInContent() {
             {status === "loading" ? "로그인 중..." : "Google로 계속하기"}
           </button>
 
-          <button
-            onClick={() => handleSignIn("kakao")}
-            disabled={status === "loading"}
-            className="w-full rounded-lg bg-[#FEE500] px-4 py-3 text-sm font-semibold text-[#000000] transition-colors hover:bg-[#FDD835] flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 3c5.799 0 10.5 3.664 10.5 8.185 0 4.52-4.701 8.184-10.5 8.184a13.5 13.5 0 0 1-1.78-.123l-4.29.956a.44.44 0 0 1-.53-.52l.985-4.238c-2.14-1.368-3.48-3.15-3.48-5.257C3.5 6.665 8.201 3 12 3z"/>
-            </svg>
-            {status === "loading" ? "로그인 중..." : "카카오로 계속하기"}
-          </button>
         </div>
 
         <p className="text-center text-xs text-slate-400">
