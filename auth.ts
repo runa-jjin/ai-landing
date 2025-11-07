@@ -76,21 +76,37 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     token: {
       url: "https://kauth.kakao.com/oauth/token",
       async request(context: any) {
-        const { provider, params } = context;
+        // 강제로 로그 출력하여 호출 여부 확인
+        console.log('[auth] ===== Kakao token.request CALLED =====');
+        console.log('[auth] Context:', {
+          has_provider: !!context.provider,
+          has_params: !!context.params,
+          has_client: !!context.client,
+          provider_id: context.provider?.id,
+          client_id_from_context: context.client?.id?.substring(0, 10) + '...',
+        });
         
-        // 클로저에서 clientId와 clientSecret 사용
-        const requestClientId = clientId;
-        const requestClientSecret = clientSecret;
+        const { provider, params, client } = context;
+        
+        // 클로저에서 clientId와 clientSecret 사용 (우선순위)
+        const requestClientId = clientId || client?.id;
+        const requestClientSecret = clientSecret || client?.secret;
         
         console.log('[auth] Kakao token request:', { 
           client_id: requestClientId?.substring(0, 10) + '...',
           has_client_secret: !!requestClientSecret,
-          has_code: !!params.code,
-          redirect_uri: params.redirect_uri
+          has_code: !!params?.code,
+          redirect_uri: params?.redirect_uri,
+          source: clientId ? 'closure' : 'context.client'
         });
         
         if (!requestClientId || !requestClientSecret) {
-          console.error('[auth] Kakao token request - missing credentials');
+          console.error('[auth] Kakao token request - missing credentials:', {
+            closure_client_id: !!clientId,
+            context_client_id: !!client?.id,
+            closure_client_secret: !!clientSecret,
+            context_client_secret: !!client?.secret
+          });
           throw new Error('Kakao OAuth client credentials are missing');
         }
         
