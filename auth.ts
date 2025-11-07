@@ -37,7 +37,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
-        scope: "profile_nickname profile_image account_email",
+        scope: "profile_nickname account_email",  // profile_image는 유효한 scope가 아님
         response_type: "code",
       },
     },
@@ -45,23 +45,84 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       url: "https://kauth.kakao.com/oauth/token",
       async request(context: any) {
         const { provider, params, client } = context;
-        const response = await fetch(provider.token?.url as string, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({
-            grant_type: "authorization_code",
-            client_id: client.id,
-            client_secret: client.secret,
-            code: params.code as string,
-            redirect_uri: params.redirect_uri as string,
-          }),
+        console.log('[auth] Kakao token request:', { 
+          client_id: client.id?.substring(0, 10) + '...',
+          has_code: !!params.code,
+          redirect_uri: params.redirect_uri 
         });
-        return { tokens: await response.json() };
+        
+        try {
+          const response = await fetch(provider.token?.url as string, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              grant_type: "authorization_code",
+              client_id: client.id,
+              client_secret: client.secret,
+              code: params.code as string,
+              redirect_uri: params.redirect_uri as string,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('[auth] Kakao token error:', {
+              status: response.status,
+              statusText: response.statusText,
+              error: errorText
+            });
+            throw new Error(`Kakao token request failed: ${response.status} ${errorText}`);
+          }
+
+          const tokens = await response.json();
+          console.log('[auth] Kakao token success:', { 
+            has_access_token: !!tokens.access_token,
+            token_type: tokens.token_type 
+          });
+          return { tokens };
+        } catch (error) {
+          console.error('[auth] Kakao token request exception:', error);
+          throw error;
+        }
       },
     },
-    userinfo: "https://kapi.kakao.com/v2/user/me",
+    userinfo: {
+      url: "https://kapi.kakao.com/v2/user/me",
+      async request(context: any) {
+        const { provider, tokens } = context;
+        console.log('[auth] Kakao userinfo request');
+        
+        try {
+          const response = await fetch(provider.userinfo?.url as string, {
+            headers: {
+              Authorization: `Bearer ${tokens.access_token}`,
+            },
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error('[auth] Kakao userinfo error:', {
+              status: response.status,
+              statusText: response.statusText,
+              error: errorText
+            });
+            throw new Error(`Kakao userinfo request failed: ${response.status} ${errorText}`);
+          }
+
+          const profile = await response.json();
+          console.log('[auth] Kakao userinfo success:', { 
+            id: profile.id,
+            has_email: !!profile.kakao_account?.email 
+          });
+          return profile;
+        } catch (error) {
+          console.error('[auth] Kakao userinfo request exception:', error);
+          throw error;
+        }
+      },
+    },
     client: {
       id: options.clientId!,
       secret: options.clientSecret!,
@@ -71,7 +132,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
         id: profile.id.toString(),
         name: profile.kakao_account?.profile?.nickname || profile.kakao_account?.email || "Kakao User",
         email: profile.kakao_account?.email || `${profile.id}@kakao.com`,
-        image: profile.kakao_account?.profile?.profile_image_url,
+        // 프로필 이미지는 profile_nickname scope로도 받을 수 있음
+        image: profile.kakao_account?.profile?.profile_image_url || profile.kakao_account?.profile?.thumbnail_image_url,
       };
     },
   };
