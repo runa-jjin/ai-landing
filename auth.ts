@@ -34,6 +34,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
+    checks: [], // 카카오는 PKCE를 지원하지 않으므로 비활성화
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
@@ -158,7 +159,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       Kakao({
         clientId: KAKAO_CLIENT_ID,
         clientSecret: KAKAO_CLIENT_SECRET,
-        checks: [], // 카카오는 PKCE를 지원하지 않으므로 비활성화
       }),
     ] : []),
   ],
