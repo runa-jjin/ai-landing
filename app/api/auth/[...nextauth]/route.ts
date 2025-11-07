@@ -24,6 +24,20 @@ export async function GET(request: NextRequest) {
             fullUrl: requestUrl.href
           })
           
+          // 환경 변수 상태 확인 (보안을 위해 값은 표시하지 않음)
+          const envStatus = {
+            hasAuthSecret: !!process.env.AUTH_SECRET,
+            authSecretLength: process.env.AUTH_SECRET?.length || 0,
+            hasGoogleId: !!process.env.AUTH_GOOGLE_ID,
+            hasGoogleSecret: !!process.env.AUTH_GOOGLE_SECRET,
+            hasKakaoId: !!process.env.AUTH_KAKAO_ID,
+            hasKakaoSecret: !!process.env.AUTH_KAKAO_SECRET,
+            hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
+            nodeEnv: process.env.NODE_ENV
+          }
+          
+          console.error('[auth] Environment variables status:', envStatus)
+          
           // Kakao 관련 경로인 경우 실제 에러 정보로 교체
           if (requestUrl.pathname.includes('/callback/kakao') || 
               requestUrl.pathname.includes('/signin/kakao') ||
@@ -41,6 +55,27 @@ export async function GET(request: NextRequest) {
             
             return NextResponse.redirect(errorUrl)
           }
+          
+          // 일반 Configuration 에러인 경우 상세 정보 추가
+          let errorDescription = 'NextAuth 설정 오류가 발생했습니다.'
+          
+          if (!envStatus.hasAuthSecret) {
+            errorDescription = 'AUTH_SECRET 환경 변수가 설정되지 않았습니다. Vercel 환경 변수 설정을 확인하세요.'
+          } else if (!envStatus.hasGoogleId && !envStatus.hasKakaoId) {
+            errorDescription = 'OAuth Provider가 설정되지 않았습니다. Google 또는 Kakao OAuth 자격 증명을 설정하세요.'
+          } else if (!envStatus.hasGoogleId && !envStatus.hasGoogleSecret && 
+                     !envStatus.hasKakaoId && !envStatus.hasKakaoSecret) {
+            errorDescription = 'OAuth Provider 자격 증명이 불완전합니다. Client ID와 Secret을 모두 설정하세요.'
+          }
+          
+          errorUrl.searchParams.set('error_description', encodeURIComponent(errorDescription))
+          errorUrl.searchParams.set('error_code', 'CONFIG_ERROR')
+          
+          // 환경 변수 상태를 Base64로 인코딩하여 전달 (디버깅용)
+          const envStatusBase64 = Buffer.from(JSON.stringify(envStatus)).toString('base64')
+          errorUrl.searchParams.set('env_status', envStatusBase64)
+          
+          return NextResponse.redirect(errorUrl)
         }
       }
     }
@@ -128,6 +163,20 @@ export async function POST(request: NextRequest) {
             fullUrl: requestUrl.href
           })
           
+          // 환경 변수 상태 확인
+          const envStatus = {
+            hasAuthSecret: !!process.env.AUTH_SECRET,
+            authSecretLength: process.env.AUTH_SECRET?.length || 0,
+            hasGoogleId: !!process.env.AUTH_GOOGLE_ID,
+            hasGoogleSecret: !!process.env.AUTH_GOOGLE_SECRET,
+            hasKakaoId: !!process.env.AUTH_KAKAO_ID,
+            hasKakaoSecret: !!process.env.AUTH_KAKAO_SECRET,
+            hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
+            nodeEnv: process.env.NODE_ENV
+          }
+          
+          console.error('[auth] Environment variables status (POST):', envStatus)
+          
           // Kakao 관련 경로인 경우 실제 에러 정보로 교체
           if (requestUrl.pathname.includes('/callback/kakao') || 
               requestUrl.pathname.includes('/signin/kakao') ||
@@ -144,6 +193,27 @@ export async function POST(request: NextRequest) {
             
             return NextResponse.redirect(errorUrl)
           }
+          
+          // 일반 Configuration 에러인 경우 상세 정보 추가
+          let errorDescription = 'NextAuth 설정 오류가 발생했습니다.'
+          
+          if (!envStatus.hasAuthSecret) {
+            errorDescription = 'AUTH_SECRET 환경 변수가 설정되지 않았습니다. Vercel 환경 변수 설정을 확인하세요.'
+          } else if (!envStatus.hasGoogleId && !envStatus.hasKakaoId) {
+            errorDescription = 'OAuth Provider가 설정되지 않았습니다. Google 또는 Kakao OAuth 자격 증명을 설정하세요.'
+          } else if (!envStatus.hasGoogleId && !envStatus.hasGoogleSecret && 
+                     !envStatus.hasKakaoId && !envStatus.hasKakaoSecret) {
+            errorDescription = 'OAuth Provider 자격 증명이 불완전합니다. Client ID와 Secret을 모두 설정하세요.'
+          }
+          
+          errorUrl.searchParams.set('error_description', encodeURIComponent(errorDescription))
+          errorUrl.searchParams.set('error_code', 'CONFIG_ERROR')
+          
+          // 환경 변수 상태를 Base64로 인코딩하여 전달 (디버깅용)
+          const envStatusBase64 = Buffer.from(JSON.stringify(envStatus)).toString('base64')
+          errorUrl.searchParams.set('env_status', envStatusBase64)
+          
+          return NextResponse.redirect(errorUrl)
         }
       }
     }

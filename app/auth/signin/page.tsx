@@ -13,6 +13,7 @@ function SignInContent() {
   const errorDescription = searchParams.get("error_description");
   const errorCode = searchParams.get("error_code");
   const provider = searchParams.get("provider");
+  const envStatus = searchParams.get("env_status");
 
   // 로그인 성공 시 자동 리디렉션
   useEffect(() => {
@@ -101,11 +102,35 @@ function SignInContent() {
               {error === "Configuration" && (
                 <div className="mt-3 pt-3 border-t border-rose-500/30 text-xs space-y-1">
                   <div className="font-semibold text-rose-300">Configuration 에러 해결 방법:</div>
-                  <ul className="list-disc list-inside space-y-1 text-rose-200/80">
+                  {envStatus && (() => {
+                    try {
+                      // Base64 디코딩 (브라우저 환경에서는 atob 사용)
+                      const decoded = atob(envStatus);
+                      const status = JSON.parse(decoded);
+                      return (
+                        <div className="mt-2 space-y-1 text-rose-200/80">
+                          <div className="font-semibold text-rose-300">환경 변수 상태:</div>
+                          <div className="space-y-0.5 font-mono text-[10px]">
+                            <div>AUTH_SECRET: {status.hasAuthSecret ? `✅ 설정됨 (길이: ${status.authSecretLength})` : '❌ 없음'}</div>
+                            <div>Google ID: {status.hasGoogleId ? '✅' : '❌'}</div>
+                            <div>Google Secret: {status.hasGoogleSecret ? '✅' : '❌'}</div>
+                            <div>Kakao ID: {status.hasKakaoId ? '✅' : '❌'}</div>
+                            <div>Kakao Secret: {status.hasKakaoSecret ? '✅' : '❌'}</div>
+                            <div>NEXTAUTH_URL: {status.hasNextAuthUrl ? '✅' : '⚠️ 선택사항'}</div>
+                            <div>NODE_ENV: {status.nodeEnv || 'N/A'}</div>
+                          </div>
+                        </div>
+                      );
+                    } catch {
+                      return null;
+                    }
+                  })()}
+                  <ul className="list-disc list-inside space-y-1 text-rose-200/80 mt-2">
                     <li>AUTH_SECRET 환경 변수가 설정되어 있는지 확인</li>
                     <li>최소 하나의 OAuth Provider (Google 또는 Kakao)가 설정되어 있는지 확인</li>
                     <li>Vercel 환경 변수 설정에서 Production, Preview, Development 모두 체크</li>
                     <li>환경 변수 변경 후 재배포 필요</li>
+                    <li>Vercel 대시보드 → Settings → Environment Variables에서 확인</li>
                   </ul>
                 </div>
               )}
