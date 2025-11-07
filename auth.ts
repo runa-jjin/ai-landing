@@ -3,12 +3,26 @@ import Google from "next-auth/providers/google"
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers"
 import { supabaseAdmin } from "./lib/supabase"
 
-// 환경 변수 검증
+// 환경 변수 검증 및 에러 처리
 const GOOGLE_CLIENT_ID = process.env.AUTH_GOOGLE_ID;
 const GOOGLE_CLIENT_SECRET = process.env.AUTH_GOOGLE_SECRET;
 const KAKAO_CLIENT_ID = process.env.AUTH_KAKAO_ID;
 const KAKAO_CLIENT_SECRET = process.env.AUTH_KAKAO_SECRET;
 const AUTH_SECRET = process.env.AUTH_SECRET;
+const NEXTAUTH_URL = process.env.NEXTAUTH_URL;
+
+// 필수 환경 변수 검증
+if (!AUTH_SECRET) {
+  const errorMsg = '[auth] ❌ CRITICAL: AUTH_SECRET is missing! This will cause Configuration errors.';
+  console.error(errorMsg);
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('AUTH_SECRET environment variable is required');
+  }
+}
+
+if (!NEXTAUTH_URL) {
+  console.warn('[auth] ⚠️ NEXTAUTH_URL is not set. This may cause issues in production.');
+}
 
 if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
   console.error('[auth] ❌ Missing: AUTH_GOOGLE_ID or AUTH_GOOGLE_SECRET');
@@ -22,10 +36,10 @@ if (!KAKAO_CLIENT_ID || !KAKAO_CLIENT_SECRET) {
   console.log('[auth] ✅ Kakao OAuth credentials loaded');
 }
 
-if (!AUTH_SECRET) {
-  console.error('[auth] ❌ Missing: AUTH_SECRET');
-} else {
+if (AUTH_SECRET) {
   console.log('[auth] ✅ AUTH_SECRET loaded');
+} else {
+  console.error('[auth] ❌ AUTH_SECRET missing - Configuration errors will occur!');
 }
 
 // 카카오 OAuth Provider 설정
