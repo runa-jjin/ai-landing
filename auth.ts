@@ -73,7 +73,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
-        scope: "profile_nickname profile_image account_email",  // 카카오 동의항목: profile이 profile_nickname과 profile_image로 분리됨
+        // 카카오 OAuth scope는 공백으로 구분 (NextAuth가 자동으로 URL 인코딩)
+        scope: "profile_nickname profile_image account_email",
         response_type: "code",
         // client_id는 NextAuth v5가 자동으로 client.id에서 가져오므로 명시적으로 추가하지 않음
       },
@@ -448,6 +449,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   secret: AUTH_SECRET,
+  // Vercel 배포 시 호스트 신뢰 설정 (NextAuth v5)
+  trustHost: true,
   // NEXTAUTH_URL이 없으면 자동으로 감지하지만, 명시적으로 설정하는 것이 좋습니다
   ...(NEXTAUTH_URL ? { basePath: undefined } : {}), // basePath는 자동 감지
 })
