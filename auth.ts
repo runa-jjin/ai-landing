@@ -129,14 +129,32 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       secret: options.clientSecret!,
     },
     profile(profile) {
-      // 카카오 동의항목 변경: profile이 profile_nickname과 profile_image로 분리됨
-      // profile_nickname scope로 nickname 접근, profile_image scope로 이미지 접근
-      return {
-        id: profile.id.toString(),
-        name: profile.kakao_account?.profile?.nickname || profile.kakao_account?.email || "Kakao User",
-        email: profile.kakao_account?.email || `${profile.id}@kakao.com`,
-        image: profile.kakao_account?.profile?.profile_image_url || profile.kakao_account?.profile?.thumbnail_image_url,
-      };
+      try {
+        // 카카오 동의항목 변경: profile이 profile_nickname과 profile_image로 분리됨
+        // profile_nickname scope로 nickname 접근, profile_image scope로 이미지 접근
+        console.log('[auth] Kakao profile mapping:', {
+          hasProfile: !!profile,
+          hasKakaoAccount: !!profile?.kakao_account,
+          profileId: profile?.id,
+          email: profile?.kakao_account?.email,
+          nickname: profile?.kakao_account?.profile?.nickname
+        });
+
+        if (!profile || !profile.id) {
+          console.error('[auth] Invalid Kakao profile:', profile);
+          throw new Error('Invalid Kakao profile data');
+        }
+
+        return {
+          id: profile.id.toString(),
+          name: profile.kakao_account?.profile?.nickname || profile.kakao_account?.email || "Kakao User",
+          email: profile.kakao_account?.email || `${profile.id}@kakao.com`,
+          image: profile.kakao_account?.profile?.profile_image_url || profile.kakao_account?.profile?.thumbnail_image_url,
+        };
+      } catch (error) {
+        console.error('[auth] Error in Kakao profile mapping:', error);
+        throw error;
+      }
     },
   };
 }

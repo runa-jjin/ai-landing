@@ -9,6 +9,14 @@ function SignInContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+  const error = searchParams.get("error");
+
+  // 에러가 있는 경우 표시
+  useEffect(() => {
+    if (error) {
+      console.error("[signin] Auth error:", error);
+    }
+  }, [error]);
 
   // 로그인 성공 시 자동 리디렉션
   useEffect(() => {
@@ -55,6 +63,11 @@ function SignInContent() {
           <p className="mt-2 text-sm text-slate-400">
             소셜 계정으로 간편하게 로그인하세요
           </p>
+          {error && (
+            <div className="mt-4 rounded-lg bg-rose-500/10 border border-rose-500/50 px-4 py-2 text-sm text-rose-200">
+              로그인 중 오류가 발생했습니다: {error}
+            </div>
+          )}
         </div>
 
         <div className="space-y-3">
