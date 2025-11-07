@@ -29,14 +29,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="ko"> 
       <head>
         {/* Google AdSense */}
-        {adSenseClientId && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${adSenseClientId}`}
-            crossOrigin="anonymous"
-            strategy="lazyOnload"
-          />
-        )}
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8630393397499631"
+          crossOrigin="anonymous"
+          strategy="lazyOnload"
+        />
         
         {/* 카카오 애드핏 */}
         {kakaoAdFitKey && (
