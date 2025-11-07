@@ -195,34 +195,43 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
   };
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET ? [
-      Google({
-        clientId: GOOGLE_CLIENT_ID,
-        clientSecret: GOOGLE_CLIENT_SECRET,
-        authorization: {
-          params: {
-            prompt: "consent",
-            access_type: "offline",
-            response_type: "code"
-          }
+// NextAuth 설정 전에 환경 변수 재확인
+if (!AUTH_SECRET) {
+  console.error('[auth] ❌ CRITICAL: AUTH_SECRET is required for NextAuth');
+}
+
+const providers = [
+  ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET ? [
+    Google({
+      clientId: GOOGLE_CLIENT_ID,
+      clientSecret: GOOGLE_CLIENT_SECRET,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
         }
-      }),
-    ] : []),
-    ...(KAKAO_CLIENT_ID && KAKAO_CLIENT_SECRET ? [
-      Kakao({
-        clientId: KAKAO_CLIENT_ID,
-        clientSecret: KAKAO_CLIENT_SECRET,
-      }),
-    ] : []),
-  ],
+      }
+    }),
+  ] : []),
+  ...(KAKAO_CLIENT_ID && KAKAO_CLIENT_SECRET ? [
+    Kakao({
+      clientId: KAKAO_CLIENT_ID,
+      clientSecret: KAKAO_CLIENT_SECRET,
+    }),
+  ] : []),
+];
+
+console.log('[auth] NextAuth providers count:', providers.length);
+
+export const { handlers, signIn, signOut, auth } = NextAuth({
+  providers,
   trustHost: true, // Vercel 배포 시 필수
   pages: {
     signIn: '/auth/signin',
-    error: '/auth/signin?error=Configuration', // 에러 발생 시 로그인 페이지로 리디렉션
+    error: '/auth/signin', // 에러 발생 시 로그인 페이지로 리디렉션 (에러 타입은 쿼리 파라미터로 자동 전달됨)
   },
-  debug: true, // 디버그 모드 활성화
+  debug: process.env.NODE_ENV === 'development', // 개발 환경에서만 디버그 모드 활성화
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
@@ -330,6 +339,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-  secret: AUTH_SECRET,
+  secret: AUTH_SECRET || process.env.AUTH_SECRET, // NextAuth v5에서 필수
+  // NEXTAUTH_URL이 없으면 자동으로 감지하지만, 명시적으로 설정하는 것이 좋습니다
+  ...(NEXTAUTH_URL ? { basePath: undefined } : {}), // basePath는 자동 감지
 })
 
