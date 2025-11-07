@@ -66,11 +66,16 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     name: "Kakao",
     type: "oauth",
     checks: [], // 카카오는 PKCE를 지원하지 않으므로 비활성화
+    client: {
+      id: clientId as string,
+      secret: clientSecret as string,
+    },
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
         scope: "profile_nickname profile_image account_email",  // 카카오 동의항목: profile이 profile_nickname과 profile_image로 분리됨
         response_type: "code",
+        client_id: clientId, // 명시적으로 client_id 추가
       },
     },
     token: {
@@ -176,10 +181,6 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
           throw error;
         }
       },
-    },
-    client: {
-      id: clientId as string,
-      secret: clientSecret as string,
     },
     profile(profile) {
       try {
