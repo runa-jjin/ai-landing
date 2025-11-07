@@ -235,14 +235,22 @@ const providers = [
     }),
   ] : []),
   ...(KAKAO_CLIENT_ID && KAKAO_CLIENT_SECRET ? [
-    Kakao({
-      clientId: KAKAO_CLIENT_ID,
-      clientSecret: KAKAO_CLIENT_SECRET,
-    }),
+    (() => {
+      console.log('[auth] Creating Kakao provider with:', {
+        has_client_id: !!KAKAO_CLIENT_ID,
+        has_client_secret: !!KAKAO_CLIENT_SECRET,
+        client_id_preview: KAKAO_CLIENT_ID?.substring(0, 10) + '...'
+      });
+      return Kakao({
+        clientId: KAKAO_CLIENT_ID,
+        clientSecret: KAKAO_CLIENT_SECRET,
+      });
+    })(),
   ] : []),
 ];
 
 console.log('[auth] NextAuth providers count:', providers.length);
+console.log('[auth] Provider IDs:', providers.map(p => p.id));
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers,
