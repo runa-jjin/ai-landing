@@ -22,9 +22,9 @@ function SignInContent() {
   const handleSignIn = async (provider: string) => {
     try {
       console.log(`[signin] Attempting ${provider} sign in`);
+      // NextAuth가 자동으로 리디렉션 처리하므로 redirect 옵션 제거
       await signIn(provider, { 
         callbackUrl: callbackUrl,
-        redirect: true // 명시적으로 리디렉션 활성화
       });
     } catch (error) {
       console.error(`[signin] ${provider} sign in error:`, error);

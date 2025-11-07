@@ -172,7 +172,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-        console.log('[auth] Sign in callback triggered for:', user.email);
+        console.log('[auth] Sign in callback triggered:', { 
+          userId: user.id, 
+          email: user.email, 
+          provider: account?.provider,
+          hasAccount: !!account,
+          hasProfile: !!profile
+        });
         
         if (!supabaseAdmin) {
           console.warn('[auth] Supabase not initialized, skipping DB sync');
@@ -238,11 +244,36 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return true; // 에러가 있어도 로그인은 허용
       }
     },
-    async session({ session, token }) {
-      if (token?.sub) {
-        session.user.id = token.sub
+    async jwt({ token, user, account, profile }) {
+      // 초기 로그인 시 user 정보를 token에 저장
+      if (user) {
+        console.log('[auth] JWT callback - user:', { id: user.id, email: user.email });
+        token.id = user.id;
+        token.email = user.email;
+        token.name = user.name;
+        token.picture = user.image;
       }
-      return session
+      return token;
+    },
+    async session({ session, token }) {
+      // session에 token 정보 추가
+      if (token?.id) {
+        session.user.id = token.id as string;
+      }
+      if (token?.email) {
+        session.user.email = token.email as string;
+      }
+      if (token?.name) {
+        session.user.name = token.name as string;
+      }
+      if (token?.picture) {
+        session.user.image = token.picture as string;
+      }
+      console.log('[auth] Session callback - session:', { 
+        userId: session.user.id, 
+        email: session.user.email 
+      });
+      return session;
     },
   },
   secret: AUTH_SECRET,
