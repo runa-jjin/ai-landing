@@ -1,6 +1,5 @@
 import NextAuth from "next-auth"
-import { getServerSession } from "next-auth/next"
-import GoogleProvider from "next-auth/providers/google"
+import Google from "next-auth/providers/google"
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers/oauth"
 import { supabaseAdmin } from "./lib/supabase"
 
@@ -66,8 +65,11 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
-    clientId: clientId as string,
-    clientSecret: clientSecret as string,
+    checks: [], // 카카오는 PKCE를 지원하지 않으므로 비활성화
+    client: {
+      id: clientId as string,
+      secret: clientSecret as string,
+    },
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
@@ -238,7 +240,7 @@ if (!AUTH_SECRET) {
 
 const providers = [
   ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET ? [
-    GoogleProvider({
+    Google({
       clientId: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
@@ -268,7 +270,7 @@ const providers = [
 console.log('[auth] NextAuth providers count:', providers.length);
 console.log('[auth] Provider IDs:', providers.map(p => p.id));
 
-export const authOptions = {
+export const { handlers, signIn, signOut, auth } = NextAuth({
   providers,
   pages: {
     signIn: '/auth/signin',
@@ -383,12 +385,7 @@ export const authOptions = {
     },
   },
   secret: AUTH_SECRET || process.env.AUTH_SECRET,
-  // Vercel 배포 시 쿠키 설정 - useSecureCookies는 자동 감지
-  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? process.env.VERCEL === '1',
-}
-
-// NextAuth v4에서 getServerSession을 사용하기 위한 헬퍼 함수
-export async function auth() {
-  return await getServerSession(authOptions)
-}
+  // NEXTAUTH_URL이 없으면 자동으로 감지하지만, 명시적으로 설정하는 것이 좋습니다
+  ...(NEXTAUTH_URL ? { basePath: undefined } : {}), // basePath는 자동 감지
+})
 
