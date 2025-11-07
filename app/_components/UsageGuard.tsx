@@ -1,9 +1,10 @@
 "use client";
 
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { USAGE_LIMIT } from "@/lib/user-usage";
 import { useAppStore } from "@/store/useAppStore";
+import { getUsageInfo } from "@/app/actions/getUserUsage";
 
 type UsageGuardProps = {
   children: (props: { blocked: boolean; openPaywall: () => void }) => ReactNode;
@@ -12,12 +13,28 @@ type UsageGuardProps = {
 const paymentUrl = process.env.NEXT_PUBLIC_PAYMENT_URL ?? "https://qr.kakaopay.com/FaHneA0xp251c06091";
 
 export function UsageGuard({ children }: UsageGuardProps) {
-  const { usageCount, planType, isPaywallOpen, setPaywallOpen } = useAppStore();
+  const { planType, isPaywallOpen, setPaywallOpen, setPlanType } = useAppStore();
+  const [usageInfo, setUsageInfo] = useState({
+    isAuthenticated: false,
+    used: 0,
+    remaining: USAGE_LIMIT,
+    limit: USAGE_LIMIT,
+    canGenerate: false,
+    planType: 'free' as string,
+  });
+
+  // 서버에서 사용량 정보 가져오기
+  useEffect(() => {
+    getUsageInfo().then((info) => {
+      setUsageInfo(info);
+      setPlanType(info.planType);
+    });
+  }, [setPlanType]);
 
   // Pro 플랜은 제한 없음
-  const isPro = planType === 'pro';
-  const blocked = !isPro && usageCount >= USAGE_LIMIT;
-  const remaining = Math.max(0, USAGE_LIMIT - usageCount);
+  const isPro = usageInfo.planType === 'pro';
+  const blocked = !isPro && usageInfo.used >= USAGE_LIMIT;
+  const remaining = Math.max(0, USAGE_LIMIT - usageInfo.used);
 
   const modal =
     isPaywallOpen &&
@@ -32,7 +49,7 @@ export function UsageGuard({ children }: UsageGuardProps) {
         <div className="card max-w-md space-y-4 text-center">
           <h3 className="text-xl font-semibold">무료 한도 도달</h3> 
           <p className="text-sm text-slate-300"> 
-            현재 계정은 총 {USAGE_LIMIT}회 생성 중 {usageCount}회를 사용했습니다.
+            현재 계정은 총 {USAGE_LIMIT}회 생성 중 {usageInfo.used}회를 사용했습니다.
           </p>
           <div className="rounded-lg bg-slate-800/50 p-4 text-left text-sm space-y-2">
             <p className="font-semibold text-primary">💳 프로 요금제</p>

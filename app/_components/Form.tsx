@@ -131,7 +131,9 @@ export function Form() {
           <h2 className="text-lg font-semibold">브리프 입력</h2>
           <p className="text-xs text-slate-400">
             {usageInfo?.isAuthenticated 
-              ? `무료 체험 ${usageInfo?.limit ?? 3}회 중 ${usageInfo?.remaining ?? 3}회 남았습니다.`
+              ? usageInfo?.planType === 'pro'
+                ? "✨ Pro 플랜 (무제한 사용 가능)"
+                : `무료 체험 ${usageInfo?.limit ?? 3}회 중 ${usageInfo?.remaining ?? 3}회 남았습니다.`
               : "로그인하여 무료로 체험해보세요."}
           </p> 
         </div>

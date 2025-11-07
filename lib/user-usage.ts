@@ -27,16 +27,10 @@ export async function getUserUsage(userId: string): Promise<number> {
       return userUsageMemory.get(userId) || 0;
     }
 
-    // 레코드가 없으면 생성
+    // 레코드가 없으면 0 반환 (생성은 auth.ts의 signIn 콜백에서만 수행)
+    // 외래 키 제약 조건을 피하기 위해 여기서는 생성하지 않음
     if (!data) {
-      const { error: insertError } = await supabaseAdmin
-        .from('user_usage')
-        .insert({ user_id: userId, usage_count: 0 });
-      
-      if (insertError) {
-        console.error('[user-usage] Error creating usage record:', insertError.message);
-        return userUsageMemory.get(userId) || 0;
-      }
+      console.log('[user-usage] No usage record found for userId:', userId, '- returning 0 (record should be created in signIn callback)');
       return 0;
     }
 
@@ -105,8 +99,16 @@ export async function canUserGenerate(userId: string): Promise<boolean> {
   return usage < USAGE_LIMIT;
 }
 
-// 남은 사용량 조회
+// 남은 사용량 조회 (Pro 플랜은 무제한)
 export async function getRemainingUsage(userId: string): Promise<number> {
+  const plan = await getUserPlan(userId);
+  
+  // Pro 플랜은 무제한 (큰 숫자 반환)
+  if (plan === 'pro') {
+    return 999999;
+  }
+  
+  // Free 플랜은 제한 적용
   const used = await getUserUsage(userId);
   return Math.max(0, USAGE_LIMIT - used);
 }
@@ -142,11 +144,39 @@ export async function getUserPlan(userId: string): Promise<string> {
 
     console.log('[user-usage] 🔍 Fetching plan for userId:', userId);
 
-    const { data, error } = await supabaseAdmin
+    // 먼저 user_id로 조회
+    let { data, error } = await supabaseAdmin
       .from('user_usage')
-      .select('plan_type')
+      .select('plan_type, user_id')
       .eq('user_id', userId)
       .maybeSingle();
+
+    // user_id로 찾지 못한 경우, users 테이블에서 email로 조회 시도
+    if (!data && !error) {
+      console.log('[user-usage] 🔄 Trying to find user by email/id mapping...');
+      
+      // users 테이블에서 해당 id의 email 찾기
+      const { data: userData } = await supabaseAdmin
+        .from('users')
+        .select('email, id')
+        .eq('id', userId)
+        .maybeSingle();
+
+      if (userData?.email) {
+        console.log('[user-usage] 📧 Found user email:', userData.email);
+        // email로 user_usage 조회 시도 (만약 user_id가 email로 저장된 경우)
+        const { data: emailData } = await supabaseAdmin
+          .from('user_usage')
+          .select('plan_type, user_id')
+          .eq('user_id', userData.email)
+          .maybeSingle();
+        
+        if (emailData) {
+          console.log('[user-usage] ✅ Found plan by email mapping:', emailData.plan_type);
+          return emailData.plan_type || 'free';
+        }
+      }
+    }
 
     if (error) {
       console.error('[user-usage] ❌ Error fetching plan:', error);
@@ -155,10 +185,16 @@ export async function getUserPlan(userId: string): Promise<string> {
 
     if (!data) {
       console.log('[user-usage] ⚠️ No data found for userId:', userId);
+      // 모든 user_usage 레코드 확인 (디버깅용)
+      const { data: allData } = await supabaseAdmin
+        .from('user_usage')
+        .select('user_id, plan_type')
+        .limit(10);
+      console.log('[user-usage] 🔍 Sample user_usage records:', allData);
       return 'free';
     }
 
-    console.log('[user-usage] ✅ Plan type found:', data.plan_type);
+    console.log('[user-usage] ✅ Plan type found:', data.plan_type, 'for user_id:', data.user_id);
     return data.plan_type || 'free';
   } catch (error) {
     console.error('[user-usage] ❌ Exception in getUserPlan:', error);
