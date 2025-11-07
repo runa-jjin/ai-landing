@@ -59,12 +59,30 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     token: {
       url: "https://kauth.kakao.com/oauth/token",
       async request(context: any) {
-        const { provider, params, client } = context;
+        const { provider, params } = context;
+        // NextAuth v5에서는 provider.client를 통해 접근하거나 options에서 직접 가져옵니다
+        const clientId = provider.client?.id || options.clientId;
+        const clientSecret = provider.client?.secret || options.clientSecret;
+        
         console.log('[auth] Kakao token request:', { 
-          client_id: client.id?.substring(0, 10) + '...',
+          client_id: clientId?.substring(0, 10) + '...',
+          has_client_secret: !!clientSecret,
           has_code: !!params.code,
-          redirect_uri: params.redirect_uri 
+          redirect_uri: params.redirect_uri,
+          provider_client_id: provider.client?.id?.substring(0, 10) + '...',
+          options_client_id: options.clientId?.substring(0, 10) + '...'
         });
+        
+        if (!clientId || !clientSecret) {
+          console.error('[auth] Kakao token request - missing credentials:', {
+            has_client_id: !!clientId,
+            has_client_secret: !!clientSecret,
+            provider_client: !!provider.client,
+            provider_client_id: !!provider.client?.id,
+            options_client_id: !!options.clientId
+          });
+          throw new Error('Kakao OAuth client credentials are missing');
+        }
         
         try {
           const response = await fetch(provider.token?.url as string, {
@@ -74,8 +92,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
             },
             body: new URLSearchParams({
               grant_type: "authorization_code",
-              client_id: client.id,
-              client_secret: client.secret,
+              client_id: clientId,
+              client_secret: clientSecret,
               code: params.code as string,
               redirect_uri: params.redirect_uri as string,
             }),
@@ -111,6 +129,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
         
         try {
           const response = await fetch(provider.userinfo?.url as string, {
+            method: "GET",
             headers: {
               Authorization: `Bearer ${tokens.access_token}`,
             },
@@ -121,7 +140,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
             console.error('[auth] Kakao userinfo error:', {
               status: response.status,
               statusText: response.statusText,
-              error: errorText
+              error: errorText,
+              access_token_preview: tokens.access_token?.substring(0, 20) + '...'
             });
             throw new Error(`Kakao userinfo request failed: ${response.status} ${errorText}`);
           }
@@ -129,7 +149,9 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
           const profile = await response.json();
           console.log('[auth] Kakao userinfo success:', { 
             id: profile.id,
-            has_email: !!profile.kakao_account?.email 
+            has_email: !!profile.kakao_account?.email,
+            has_nickname: !!profile.kakao_account?.profile?.nickname,
+            has_profile: !!profile.kakao_account?.profile
           });
           return profile;
         } catch (error) {
