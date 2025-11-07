@@ -75,71 +75,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     },
     token: {
       url: "https://kauth.kakao.com/oauth/token",
-      async request(context: any) {
-        const { provider, params } = context;
-        
-        console.log('[auth] Kakao token request START:', { 
-          client_id: clientId?.substring(0, 10) + '...',
-          has_client_secret: !!clientSecret,
-          has_code: !!params.code,
-          redirect_uri: params.redirect_uri,
-          provider_id: provider.id
-        });
-        
-        if (!clientId || !clientSecret) {
-          console.error('[auth] Kakao token request - missing credentials:', {
-            has_client_id: !!clientId,
-            has_client_secret: !!clientSecret
-          });
-          throw new Error('Kakao OAuth client credentials are missing');
-        }
-        
-        try {
-          const tokenUrl = provider.token?.url || "https://kauth.kakao.com/oauth/token";
-          const requestBody = new URLSearchParams({
-            grant_type: "authorization_code",
-            client_id: clientId,
-            client_secret: clientSecret,
-            code: params.code as string,
-            redirect_uri: params.redirect_uri as string,
-          });
-          
-          console.log('[auth] Kakao token request body:', {
-            grant_type: "authorization_code",
-            client_id: clientId.substring(0, 10) + '...',
-            has_code: !!params.code,
-            redirect_uri: params.redirect_uri
-          });
-          
-          const response = await fetch(tokenUrl, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: requestBody,
-          });
-
-          if (!response.ok) {
-            const errorText = await response.text();
-            console.error('[auth] Kakao token error:', {
-              status: response.status,
-              statusText: response.statusText,
-              error: errorText
-            });
-            throw new Error(`Kakao token request failed: ${response.status} ${errorText}`);
-          }
-
-          const tokens = await response.json();
-          console.log('[auth] Kakao token success:', { 
-            has_access_token: !!tokens.access_token,
-            token_type: tokens.token_type 
-          });
-          return { tokens };
-        } catch (error) {
-          console.error('[auth] Kakao token request exception:', error);
-          throw error;
-        }
-      },
+      // NextAuth v5의 기본 토큰 요청을 사용하되, client 설정이 제대로 전달되도록 함
     },
     userinfo: {
       url: "https://kapi.kakao.com/v2/user/me",
@@ -181,8 +117,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       },
     },
     client: {
-      id: clientId,
-      secret: clientSecret,
+      id: clientId as string,
+      secret: clientSecret as string,
     },
     profile(profile) {
       try {
