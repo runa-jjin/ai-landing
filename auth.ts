@@ -38,7 +38,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
-        scope: "profile_nickname account_email",  // profile_image는 유효한 scope가 아님
+        scope: "profile_nickname profile_image account_email",  // 카카오 동의항목: profile이 profile_nickname과 profile_image로 분리됨
         response_type: "code",
       },
     },
@@ -129,11 +129,12 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       secret: options.clientSecret!,
     },
     profile(profile) {
+      // 카카오 동의항목 변경: profile이 profile_nickname과 profile_image로 분리됨
+      // profile_nickname scope로 nickname 접근, profile_image scope로 이미지 접근
       return {
         id: profile.id.toString(),
         name: profile.kakao_account?.profile?.nickname || profile.kakao_account?.email || "Kakao User",
         email: profile.kakao_account?.email || `${profile.id}@kakao.com`,
-        // 프로필 이미지는 profile_nickname scope로도 받을 수 있음
         image: profile.kakao_account?.profile?.profile_image_url || profile.kakao_account?.profile?.thumbnail_image_url,
       };
     },

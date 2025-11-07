@@ -2,6 +2,7 @@
 
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
+import Image from "next/image";
 
 export function Header() {
   const { data: session, status } = useSession();
@@ -10,10 +11,14 @@ export function Header() {
     <header className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
       <div className="flex items-center gap-4">
         {/* 로고 */}
-        <img
+        <Image
           src="/logo.png"
           alt="랜딩페이지 문구 자동 생성기 로고"
+          width={48}
+          height={48}
           className="h-12 w-auto"
+          priority
+          quality={90}
         />
         <div className="flex flex-col">
           <h1 className="text-2xl font-bold tracking-tight gradient-text">
