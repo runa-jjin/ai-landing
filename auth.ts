@@ -1,5 +1,5 @@
 import NextAuth from "next-auth"
-import Google from "next-auth/providers/google"
+import GoogleProvider from "next-auth/providers/google"
 import type { OAuthConfig, OAuthUserConfig } from "next-auth/providers"
 import { supabaseAdmin } from "./lib/supabase"
 
@@ -65,11 +65,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     id: "kakao",
     name: "Kakao",
     type: "oauth",
-    checks: [], // 카카오는 PKCE를 지원하지 않으므로 비활성화
-    client: {
-      id: clientId as string,
-      secret: clientSecret as string,
-    },
+    clientId: clientId as string,
+    clientSecret: clientSecret as string,
     authorization: {
       url: "https://kauth.kakao.com/oauth/authorize",
       params: {
@@ -122,7 +119,7 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
         }
       },
     },
-    profile(profile) {
+    profile(profile: any) {
       try {
         // 카카오 동의항목 변경: profile이 profile_nickname과 profile_image로 분리됨
         // profile_nickname scope로 nickname 접근, profile_image scope로 이미지 접근
@@ -160,7 +157,7 @@ if (!AUTH_SECRET) {
 
 const providers = [
   ...(GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET ? [
-    Google({
+    GoogleProvider({
       clientId: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
       authorization: {
@@ -190,16 +187,15 @@ const providers = [
 console.log('[auth] NextAuth providers count:', providers.length);
 console.log('[auth] Provider IDs:', providers.map(p => p.id));
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const authOptions = {
   providers,
-  trustHost: true, // Vercel 배포 시 필수
   pages: {
     signIn: '/auth/signin',
     error: '/auth/signin', // 에러 발생 시 로그인 페이지로 리디렉션 (에러 타입은 쿼리 파라미터로 자동 전달됨)
   },
   debug: process.env.NODE_ENV === 'development', // 개발 환경에서만 디버그 모드 활성화
   callbacks: {
-    async signIn({ user, account, profile }) {
+    async signIn({ user, account, profile }: { user: any; account: any; profile?: any }) {
       try {
         console.log('[auth] Sign in callback triggered:', { 
           userId: user.id, 
@@ -273,7 +269,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return true; // 에러가 있어도 로그인은 허용
       }
     },
-    async jwt({ token, user, account, profile }) {
+    async jwt({ token, user, account, profile }: { token: any; user?: any; account?: any; profile?: any }) {
       // 초기 로그인 시 user 정보를 token에 저장
       if (user) {
         console.log('[auth] JWT callback - user:', { id: user.id, email: user.email });
@@ -284,7 +280,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       // session에 token 정보 추가
       if (token?.id) {
         session.user.id = token.id as string;
@@ -305,8 +301,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return session;
     },
   },
-  secret: AUTH_SECRET || process.env.AUTH_SECRET, // NextAuth v5에서 필수
-  // NEXTAUTH_URL이 없으면 자동으로 감지하지만, 명시적으로 설정하는 것이 좋습니다
-  ...(NEXTAUTH_URL ? { basePath: undefined } : {}), // basePath는 자동 감지
-})
+  secret: AUTH_SECRET || process.env.AUTH_SECRET,
+  // Vercel 배포 시 useSecureCookies 자동 감지
+  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? false,
+}
 

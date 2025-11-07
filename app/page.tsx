@@ -5,6 +5,7 @@ import { Form } from "./_components/Form";
 import { ResultCards } from "./_components/ResultCards";
 import { Preview } from "./_components/Preview";
 import { UsageGuard } from "./_components/UsageGuard";
+import { AdSense, KakaoAdFit } from "./_components/Ads";
 import { useAppStore } from "@/store/useAppStore";
 
 function LoadingPlaceholder() {
@@ -40,6 +41,19 @@ export default function Page() {
               {error}
             </div>
           )}
+          
+          {/* 사이드바 광고 (모바일에서는 숨김) */}
+          <div className="hidden lg:block">
+            <div className="card p-4">
+              <AdSense 
+                adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_1 || ""} 
+                adFormat="vertical"
+                className="min-h-[250px]"
+              />
+              {/* 또는 카카오 애드핏 사용 시 */}
+              {/* <KakaoAdFit unitId={process.env.NEXT_PUBLIC_KAKAO_ADFIT_UNIT_1 || ""} /> */}
+            </div>
+          </div>
         </div>
         <div className="space-y-4">
           <div className="flex gap-2" role="tablist" aria-label="결과 및 미리보기 탭">
@@ -66,6 +80,17 @@ export default function Page() {
             <Suspense fallback={<LoadingPlaceholder />}>
               {activeTab === "preview" ? <Preview result={result} /> : <ResultCards result={result} />}
             </Suspense>
+          </div>
+          
+          {/* 결과 영역 하단 광고 */}
+          <div className="card p-4">
+            <AdSense 
+              adSlot={process.env.NEXT_PUBLIC_ADSENSE_SLOT_2 || ""} 
+              adFormat="horizontal"
+              className="min-h-[100px]"
+            />
+            {/* 또는 카카오 애드핏 사용 시 */}
+            {/* <KakaoAdFit unitId={process.env.NEXT_PUBLIC_KAKAO_ADFIT_UNIT_2 || ""} /> */}
           </div>
         </div>
       </div>
