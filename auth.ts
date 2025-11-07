@@ -44,6 +44,14 @@ if (AUTH_SECRET) {
 
 // 카카오 OAuth Provider 설정
 function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
+  // 클로저로 clientId와 clientSecret을 미리 저장
+  const clientId = options.clientId!;
+  const clientSecret = options.clientSecret!;
+  
+  if (!clientId || !clientSecret) {
+    throw new Error('Kakao OAuth requires clientId and clientSecret');
+  }
+  
   return {
     id: "kakao",
     name: "Kakao",
@@ -60,26 +68,18 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       url: "https://kauth.kakao.com/oauth/token",
       async request(context: any) {
         const { provider, params } = context;
-        // NextAuth v5에서는 provider.client를 통해 접근하거나 options에서 직접 가져옵니다
-        const clientId = provider.client?.id || options.clientId;
-        const clientSecret = provider.client?.secret || options.clientSecret;
         
         console.log('[auth] Kakao token request:', { 
           client_id: clientId?.substring(0, 10) + '...',
           has_client_secret: !!clientSecret,
           has_code: !!params.code,
-          redirect_uri: params.redirect_uri,
-          provider_client_id: provider.client?.id?.substring(0, 10) + '...',
-          options_client_id: options.clientId?.substring(0, 10) + '...'
+          redirect_uri: params.redirect_uri
         });
         
         if (!clientId || !clientSecret) {
           console.error('[auth] Kakao token request - missing credentials:', {
             has_client_id: !!clientId,
-            has_client_secret: !!clientSecret,
-            provider_client: !!provider.client,
-            provider_client_id: !!provider.client?.id,
-            options_client_id: !!options.clientId
+            has_client_secret: !!clientSecret
           });
           throw new Error('Kakao OAuth client credentials are missing');
         }
