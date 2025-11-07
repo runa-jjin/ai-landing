@@ -303,8 +303,8 @@ export const authOptions = {
     },
   },
   secret: AUTH_SECRET || process.env.AUTH_SECRET,
-  // Vercel 배포 시 useSecureCookies 자동 감지
-  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? false,
+  // Vercel 배포 시 쿠키 설정 - useSecureCookies는 자동 감지
+  useSecureCookies: process.env.NEXTAUTH_URL?.startsWith('https://') ?? process.env.VERCEL === '1',
 }
 
 // NextAuth v4에서 getServerSession을 사용하기 위한 헬퍼 함수
