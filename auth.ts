@@ -45,11 +45,20 @@ if (AUTH_SECRET) {
 // 카카오 OAuth Provider 설정
 function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
   // 클로저로 clientId와 clientSecret을 미리 저장
-  const clientId = options.clientId!;
-  const clientSecret = options.clientSecret!;
+  const clientId = options.clientId;
+  const clientSecret = options.clientSecret;
+  
+  // 초기화 시점에 로그 출력
+  console.log('[auth] Kakao provider initializing:', {
+    has_client_id: !!clientId,
+    has_client_secret: !!clientSecret,
+    client_id_preview: clientId?.substring(0, 10) + '...'
+  });
   
   if (!clientId || !clientSecret) {
-    throw new Error('Kakao OAuth requires clientId and clientSecret');
+    const error = 'Kakao OAuth requires clientId and clientSecret';
+    console.error('[auth] ❌', error);
+    throw new Error(error);
   }
   
   return {
@@ -69,11 +78,12 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       async request(context: any) {
         const { provider, params } = context;
         
-        console.log('[auth] Kakao token request:', { 
+        console.log('[auth] Kakao token request START:', { 
           client_id: clientId?.substring(0, 10) + '...',
           has_client_secret: !!clientSecret,
           has_code: !!params.code,
-          redirect_uri: params.redirect_uri
+          redirect_uri: params.redirect_uri,
+          provider_id: provider.id
         });
         
         if (!clientId || !clientSecret) {
@@ -85,18 +95,28 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
         }
         
         try {
-          const response = await fetch(provider.token?.url as string, {
+          const tokenUrl = provider.token?.url || "https://kauth.kakao.com/oauth/token";
+          const requestBody = new URLSearchParams({
+            grant_type: "authorization_code",
+            client_id: clientId,
+            client_secret: clientSecret,
+            code: params.code as string,
+            redirect_uri: params.redirect_uri as string,
+          });
+          
+          console.log('[auth] Kakao token request body:', {
+            grant_type: "authorization_code",
+            client_id: clientId.substring(0, 10) + '...',
+            has_code: !!params.code,
+            redirect_uri: params.redirect_uri
+          });
+          
+          const response = await fetch(tokenUrl, {
             method: "POST",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
-            body: new URLSearchParams({
-              grant_type: "authorization_code",
-              client_id: clientId,
-              client_secret: clientSecret,
-              code: params.code as string,
-              redirect_uri: params.redirect_uri as string,
-            }),
+            body: requestBody,
           });
 
           if (!response.ok) {
@@ -161,8 +181,8 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
       },
     },
     client: {
-      id: options.clientId!,
-      secret: options.clientSecret!,
+      id: clientId,
+      secret: clientSecret,
     },
     profile(profile) {
       try {
