@@ -5,13 +5,6 @@ import { Providers } from "./providers";
 import { Header } from "./_components/Header";
 import { StarryBackground } from "./_components/StarryBackground";
 
-import type { Metadata } from "next";
-import Script from "next/script";
-import "../styles/globals.css";
-import { Providers } from "./providers";
-import { Header } from "./_components/Header";
-import { StarryBackground } from "./_components/StarryBackground";
-
 export const metadata: Metadata = {
   title: "랜딩페이지 문구 자동 생성기 | AI 카피라이팅",
   description: "AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다. 무료 체험 3회 제공. Google 로그인으로 간편하게 시작하세요.",
