@@ -10,6 +10,9 @@ function SignInContent() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
   const error = searchParams.get("error");
+  const errorDescription = searchParams.get("error_description");
+  const errorCode = searchParams.get("error_code");
+  const provider = searchParams.get("provider");
 
   // 로그인 성공 시 자동 리디렉션
   useEffect(() => {
@@ -26,11 +29,17 @@ function SignInContent() {
   // URL에 에러가 있는 경우 확인
   useEffect(() => {
     if (error) {
-      console.error("[signin] Auth error from URL:", error);
+      console.error("[signin] Auth error from URL:", {
+        error,
+        errorDescription,
+        errorCode,
+        provider,
+        fullUrl: window.location.href
+      });
     }
     // 세션 상태 확인
     console.log("[signin] Session status:", status, "Has session:", !!session);
-  }, [error, status, session]);
+  }, [error, errorDescription, errorCode, provider, status, session]);
 
   const handleSignIn = async (provider: string) => {
     try {
@@ -69,8 +78,16 @@ function SignInContent() {
             소셜 계정으로 간편하게 로그인하세요
           </p>
           {error && (
-            <div className="mt-4 rounded-lg bg-rose-500/10 border border-rose-500/50 px-4 py-2 text-sm text-rose-200">
-              로그인 중 오류가 발생했습니다: {error}
+            <div className="mt-4 rounded-lg bg-rose-500/10 border border-rose-500/50 px-4 py-3 text-sm text-rose-200 space-y-1">
+              <div className="font-semibold">로그인 중 오류가 발생했습니다</div>
+              <div className="text-xs opacity-90">
+                <div>에러 타입: {error}</div>
+                {errorCode && <div>에러 코드: {errorCode}</div>}
+                {errorDescription && (
+                  <div className="mt-1 break-words">상세: {decodeURIComponent(errorDescription)}</div>
+                )}
+                {provider && <div>프로바이더: {provider}</div>}
+              </div>
             </div>
           )}
         </div>

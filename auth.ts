@@ -78,8 +78,72 @@ function Kakao(options: OAuthUserConfig<any>): OAuthConfig<any> {
     },
     token: {
       url: "https://kauth.kakao.com/oauth/token",
-      // NextAuth v5가 기본 토큰 요청을 사용하도록 함
-      // client 설정이 제대로 전달되도록 함
+      async request(context: any) {
+        const { provider, params, client } = context;
+        
+        console.log('[auth] Kakao token request:', {
+          has_code: !!params?.code,
+          redirect_uri: params?.redirect_uri,
+          client_id_preview: client?.id?.substring(0, 10) + '...'
+        });
+
+        try {
+          const response = await fetch(provider.token?.url as string, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({
+              grant_type: "authorization_code",
+              client_id: client.id as string,
+              client_secret: client.secret as string,
+              code: params.code as string,
+              redirect_uri: params.redirect_uri as string,
+            }),
+          });
+
+          if (!response.ok) {
+            const errorText = await response.text();
+            let errorData: any = {};
+            
+            try {
+              errorData = JSON.parse(errorText);
+            } catch {
+              // JSON 파싱 실패 시 텍스트 그대로 사용
+              errorData = { error_description: errorText };
+            }
+
+            console.error('[auth] Kakao token error:', {
+              status: response.status,
+              statusText: response.statusText,
+              error: errorData.error || 'unknown_error',
+              error_description: errorData.error_description,
+              error_code: errorData.error_code,
+              full_response: errorText
+            });
+
+            // 카카오 에러 정보를 포함한 에러 메시지 생성
+            const errorMessage = errorData.error_description || errorData.error || `HTTP ${response.status}`;
+            const error = new Error(`Kakao OAuth Error: ${errorMessage}`);
+            (error as any).code = errorData.error;
+            (error as any).description = errorData.error_description;
+            (error as any).status = response.status;
+            throw error;
+          }
+
+          const tokens = await response.json();
+          console.log('[auth] Kakao token success');
+          return { tokens };
+        } catch (error: any) {
+          console.error('[auth] Kakao token request exception:', {
+            message: error.message,
+            code: error.code,
+            description: error.description,
+            status: error.status
+          });
+          throw error;
+        }
+      },
     },
     userinfo: {
       url: "https://kapi.kakao.com/v2/user/me",
