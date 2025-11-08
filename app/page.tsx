@@ -30,31 +30,31 @@ export default function Page() {
       </UsageGuard>
       
       {/* 서비스 소개 섹션 */}
-      <section className="card space-y-4" aria-label="서비스 소개">
+      <section className="card space-y-4 mb-8" aria-label="서비스 소개">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">AI 기반 랜딩페이지 문구 자동 생성기</h2>
-          <p className="text-slate-300 leading-relaxed">
+          <h2 className="text-3xl font-bold text-white mb-3">AI 기반 랜딩페이지 문구 자동 생성기</h2>
+          <p className="text-base text-slate-300 leading-relaxed">
             브랜드 정보만 입력하면 AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다. 
             헤드라인, 서브헤드, 주요 혜택, 고객 사례, FAQ 등 완성도 높은 마케팅 카피를 즉시 받아보세요.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-primary">⚡ 빠른 생성</h3>
-            <p className="text-xs text-slate-400">몇 분 안에 전문적인 랜딩페이지 문구 완성</p>
+            <h3 className="text-base font-semibold text-primary">⚡ 빠른 생성</h3>
+            <p className="text-sm text-slate-400">몇 분 안에 전문적인 랜딩페이지 문구 완성</p>
           </div>
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-primary">🎯 브랜드 맞춤</h3>
-            <p className="text-xs text-slate-400">업종과 톤앤매너에 맞는 개인화된 카피</p>
+            <h3 className="text-base font-semibold text-primary">🎯 브랜드 맞춤</h3>
+            <p className="text-sm text-slate-400">업종과 톤앤매너에 맞는 개인화된 카피</p>
           </div>
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-primary">📋 완성형 결과</h3>
-            <p className="text-xs text-slate-400">헤드라인부터 FAQ까지 모든 요소 포함</p>
+            <h3 className="text-base font-semibold text-primary">📋 완성형 결과</h3>
+            <p className="text-sm text-slate-400">헤드라인부터 FAQ까지 모든 요소 포함</p>
           </div>
         </div>
       </section>
 
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)]"> 
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] mt-4"> 
         <div className="space-y-6">
           <Form />
           {error && (

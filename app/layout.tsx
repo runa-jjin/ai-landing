@@ -42,7 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased">
         <StarryBackground />
         <Providers>
-          <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col gap-10 px-6 py-10"> 
+          <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-10 px-6 py-10"> 
             <Header />
             <main className="flex-1 pb-16">{children}</main> 
             <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500">

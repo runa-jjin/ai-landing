@@ -128,8 +128,8 @@ export function Form() {
     <form onSubmit={handleSubmit} className="card space-y-6" aria-label="카피 생성 입력 폼">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold">브리프 입력</h2>
-          <p className="text-xs text-slate-400">
+          <h2 className="text-xl font-semibold">브리프 입력</h2>
+          <p className="text-sm text-slate-400">
             {usageInfo?.isAuthenticated 
               ? usageInfo?.planType === 'pro'
                 ? "✨ Pro 플랜 (무제한 사용 가능)"
@@ -137,7 +137,7 @@ export function Form() {
               : "로그인하여 무료로 체험해보세요."}
           </p> 
         </div>
-        <div className="flex flex-wrap items-center gap-2 text-xs" aria-label="샘플 데이터 버튼들">
+        <div className="flex flex-wrap items-center gap-2 text-sm" aria-label="샘플 데이터 버튼들">
           <span className="badge">샘플 데이터</span>
           <button
             type="button"
@@ -170,7 +170,7 @@ export function Form() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2" role="group" aria-label="기본 정보">
-        <label className="flex flex-col gap-2 text-sm font-medium">
+        <label className="flex flex-col gap-2 text-base font-medium">
           서비스명
           <input
             type="text"
@@ -178,20 +178,20 @@ export function Form() {
             data-testid="input-serviceName"
             value={form.serviceName}
             onChange={(event) => setFormField("serviceName", event.target.value)}
-            className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
             placeholder="예) FlowGrid"
             required
           />
         </label>
         <div className="flex flex-col gap-2">
-          <label className="flex flex-col gap-2 text-sm font-medium">
+          <label className="flex flex-col gap-2 text-base font-medium">
             업종
             <select
               aria-label="업종 선택"
               data-testid="select-industry"
               value={form.industry}
               onChange={(event) => setFormField("industry", event.target.value as CopyInput["industry"])}
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
               required
             >
               {industries.map((industry) => (
@@ -209,7 +209,7 @@ export function Form() {
               placeholder="업종을 직접 입력해주세요 (예: 농업, IT서비스)"
               value={form.customIndustry || ""}
               onChange={(event) => setFormField("customIndustry", event.target.value)}
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
               required
             />
           )}
@@ -217,26 +217,26 @@ export function Form() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2" role="group" aria-label="핵심 정보">
-        <label className="flex flex-col gap-2 text-sm font-medium">
+        <label className="flex flex-col gap-2 text-base font-medium">
           핵심 가치
           <textarea
             aria-label="핵심 가치 입력"
             data-testid="textarea-coreValue"
             value={form.coreValue}
             onChange={(event) => setFormField("coreValue", event.target.value)}
-            className="h-28 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+            className="h-28 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
             placeholder="브랜드가 제공하는 핵심 가치를 작성해주세요."
             required
           />
         </label>
-        <label className="flex flex-col gap-2 text-sm font-medium">
+        <label className="flex flex-col gap-2 text-base font-medium">
           타겟 고객
           <textarea
             aria-label="타겟 고객 입력"
             data-testid="textarea-targetAudience"
             value={form.targetAudience}
             onChange={(event) => setFormField("targetAudience", event.target.value)}
-            className="h-28 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+            className="h-28 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
             placeholder="타겟 고객을 작성해주세요."
             required
           />
@@ -244,27 +244,27 @@ export function Form() {
       </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2" role="group" aria-label="차별화 정보">
-        <label className="flex flex-col gap-2 text-sm font-medium">
+        <label className="flex flex-col gap-2 text-base font-medium">
           차별점
           <textarea
             aria-label="차별점 입력"
             data-testid="textarea-differentiator"
             value={form.differentiator}
             onChange={(event) => setFormField("differentiator", event.target.value)}
-            className="h-28 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+            className="h-28 w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
             placeholder="경쟁사 대비 차별점을 작성해주세요."
             required
           />
         </label>
         <div className="flex flex-col gap-4">
-          <label className="flex flex-col gap-2 text-sm font-medium">
+          <label className="flex flex-col gap-2 text-base font-medium">
             톤앤매너
             <select
               aria-label="톤앤매너 선택"
               data-testid="select-tone"
               value={form.tone}
               onChange={(event) => setFormField("tone", event.target.value as CopyInput["tone"])}
-              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-slate-800 bg-slate-950 px-3 py-2 text-base"
               required
             >
               {tones.map((tone) => (
@@ -274,7 +274,7 @@ export function Form() {
               ))}
             </select>
           </label>
-          <div className="flex flex-col gap-2 text-sm font-medium">
+          <div className="flex flex-col gap-2 text-base font-medium">
             언어
             <div className="flex gap-2" role="radiogroup" aria-label="언어 선택">
               {languages.map((lang) => (

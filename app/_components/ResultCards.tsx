@@ -115,13 +115,13 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
   const timestamp = new Date().toISOString().slice(0, 10).replace(/-/g, "");
 
   return (
-    <div className="grid grid-cols-1 gap-4" data-testid="result-section">
+    <div className="grid grid-cols-1 gap-6" data-testid="result-section">
       {/* 전체 다운로드 버튼 */}
-      <div className="card p-4 bg-slate-900/50 border border-slate-800">
+      <div className="card p-5 bg-slate-900/50 border border-slate-800">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h3 className="text-sm font-semibold text-white">전체 결과 다운로드</h3>
-            <p className="text-xs text-slate-400 mt-1">모든 카피를 한 번에 다운로드하세요</p>
+            <h3 className="text-base font-semibold text-white">전체 결과 다운로드</h3>
+            <p className="text-sm text-slate-400 mt-1">모든 카피를 한 번에 다운로드하세요</p>
           </div>
           <div className="flex gap-2">
             <DownloadButton
@@ -149,9 +149,9 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
         </div>
       </div>
 
-      <section className="card space-y-3" aria-label="브랜드 음성 요약"> 
+      <section className="card space-y-4" aria-label="브랜드 음성 요약"> 
         <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">브랜드 보이스 요약</h3> 
+        <h3 className="text-xl font-semibold">브랜드 보이스 요약</h3> 
           <div className="flex gap-2">
             <CopyButton content={result.brandVoiceSummary} />
             <DownloadButton
@@ -162,12 +162,12 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
             />
           </div>
         </div>
-        <p className="text-sm leading-relaxed text-slate-200">{result.brandVoiceSummary}</p>
+        <p className="text-base leading-relaxed text-slate-200">{result.brandVoiceSummary}</p>
       </section>
 
-      <section className="card space-y-3" aria-label="헤드라인"> 
+      <section className="card space-y-4" aria-label="헤드라인"> 
         <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">헤드라인 & 서브헤드</h3> 
+        <h3 className="text-xl font-semibold">헤드라인 & 서브헤드</h3> 
           <div className="flex gap-2">
             <CopyButton content={`${result.headline}\n${result.subhead}`} />
             <DownloadButton
@@ -178,15 +178,15 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
             />
           </div>
         </div>
-        <div className="space-y-2">
-          <p className="text-xl font-bold text-slate-50">{result.headline}</p>
-          <p className="text-sm text-slate-300">{result.subhead}</p>
+        <div className="space-y-3">
+          <p className="text-2xl font-bold text-slate-50">{result.headline}</p>
+          <p className="text-base text-slate-300">{result.subhead}</p>
         </div>
       </section>
 
-      <section className="card space-y-3" aria-label="주요 혜택"> 
+      <section className="card space-y-4" aria-label="주요 혜택"> 
         <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">주요 혜택</h3> 
+        <h3 className="text-xl font-semibold">주요 혜택</h3> 
           <div className="flex gap-2">
             <CopyButton content={result.benefits.join("\n")}
               testId="copy-benefits"
@@ -199,16 +199,16 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
             />
           </div>
         </div>
-        <ul className="list-inside list-disc space-y-1 text-sm text-slate-200">
+        <ul className="list-inside list-disc space-y-2 text-base text-slate-200">
           {result.benefits.map((benefit, index) => (
             <li key={index}>{benefit}</li>
           ))}
         </ul>
       </section>
 
-      <section className="card space-y-3" aria-label="고객 사례"> 
+      <section className="card space-y-4" aria-label="고객 사례"> 
         <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">고객 사례</h3> 
+        <h3 className="text-xl font-semibold">고객 사례</h3> 
           <div className="flex gap-2">
             <CopyButton
               content={result.socialProof.map((proof) => `${proof.name}: ${proof.quote}`).join("\n")}
@@ -221,9 +221,9 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
             />
           </div>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-4">
           {result.socialProof.map((proof, index) => (
-            <blockquote key={index} className="rounded-lg border border-slate-800 bg-slate-950/40 p-4 text-sm text-slate-200">
+            <blockquote key={index} className="rounded-lg border border-slate-800 bg-slate-950/40 p-4 text-base text-slate-200">
             <p className="text-slate-100">"{proof.quote}"</p> 
             <footer className="mt-2 text-xs text-slate-400">- {proof.name}</footer> 
             </blockquote>
@@ -231,9 +231,9 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
         </div>
       </section>
 
-      <section className="card space-y-3" aria-label="CTA 제안">
+      <section className="card space-y-4" aria-label="CTA 제안">
         <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">CTA 제안</h3> 
+        <h3 className="text-xl font-semibold">CTA 제안</h3> 
           <div className="flex gap-2">
             <CopyButton content={result.ctas.join("\n")} />
             <DownloadButton
@@ -253,9 +253,9 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
         </div>
       </section>
 
-      <section className="card space-y-3" aria-label="FAQ">
+      <section className="card space-y-4" aria-label="FAQ">
         <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold">FAQ</h3> 
+        <h3 className="text-xl font-semibold">FAQ</h3> 
           <div className="flex gap-2">
             <CopyButton
               content={result.faq.map((item) => `Q: ${item.q}\nA: ${item.a}`).join("\n\n")}
@@ -268,11 +268,11 @@ ${result.faq.map((item, i) => `### Q${i + 1}. ${item.q}\n\n${item.a}`).join("\n\
             />
           </div>
         </div>
-        <div className="space-y-3 text-sm text-slate-200">
+        <div className="space-y-4 text-base text-slate-200">
           {result.faq.map((item, index) => (
             <div key={index}>
-            <p className="font-semibold text-slate-100">Q. {item.q}</p> 
-            <p className="mt-1 text-slate-300">A. {item.a}</p> 
+            <p className="font-semibold text-lg text-slate-100">Q. {item.q}</p> 
+            <p className="mt-2 text-slate-300">A. {item.a}</p> 
             </div>
           ))}
         </div>
