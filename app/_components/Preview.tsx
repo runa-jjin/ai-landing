@@ -9,8 +9,29 @@ interface PreviewProps {
 export function Preview({ result }: PreviewProps) {
   if (!result) {
     return (
-      <div className="card" aria-live="polite" data-testid="preview-empty">
-        <p className="text-sm text-slate-400">생성된 카피로 미리보기를 확인하려면 먼저 카피를 생성해주세요.</p>
+      <div className="card space-y-4" aria-live="polite" data-testid="preview-empty">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-2">랜딩페이지 미리보기</h3>
+          <p className="text-sm text-slate-400 mb-4">
+            카피를 생성하면 실제 랜딩페이지처럼 보이는 미리보기를 확인할 수 있습니다.
+          </p>
+        </div>
+        <div className="space-y-3 pt-4 border-t border-slate-800">
+          <div>
+            <h4 className="text-sm font-semibold text-slate-200 mb-2">미리보기 구성:</h4>
+            <ul className="text-xs text-slate-400 space-y-1 list-disc list-inside">
+              <li>히어로 섹션 (헤드라인, 서브헤드, CTA 버튼)</li>
+              <li>주요 혜택 섹션</li>
+              <li>고객 후기 및 사례</li>
+              <li>FAQ 아코디언</li>
+            </ul>
+          </div>
+          <div className="rounded-lg bg-slate-900/50 p-3">
+            <p className="text-xs text-slate-300">
+              💡 <strong>팁:</strong> 생성된 카피를 복사하여 실제 랜딩페이지에 바로 사용할 수 있습니다.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }

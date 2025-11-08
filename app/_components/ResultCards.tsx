@@ -10,8 +10,31 @@ interface ResultCardsProps {
 export function ResultCards({ result }: ResultCardsProps) {
   if (!result) {
     return (
-      <div className="card" aria-live="polite" data-testid="result-empty">
-      <p className="text-sm text-slate-400">생성된 카피가 여기에 표시됩니다. 브리프를 입력하고 즉시 생성을 눌러주세요.</p> 
+      <div className="card space-y-4" aria-live="polite" data-testid="result-empty">
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-2">생성된 카피가 여기에 표시됩니다</h3>
+          <p className="text-sm text-slate-400 mb-4">
+            왼쪽 폼에 브랜드 정보를 입력하고 "즉시 생성" 버튼을 클릭하면 AI가 자동으로 랜딩페이지 문구를 생성합니다.
+          </p>
+        </div>
+        <div className="space-y-3 pt-4 border-t border-slate-800">
+          <div>
+            <h4 className="text-sm font-semibold text-slate-200 mb-2">생성되는 콘텐츠:</h4>
+            <ul className="text-xs text-slate-400 space-y-1 list-disc list-inside">
+              <li>브랜드 보이스 요약</li>
+              <li>헤드라인 & 서브헤드</li>
+              <li>주요 혜택 3-5개</li>
+              <li>고객 사례 (소셜 프루프)</li>
+              <li>CTA 제안</li>
+              <li>FAQ (자주 묻는 질문)</li>
+            </ul>
+          </div>
+          <div className="rounded-lg bg-slate-900/50 p-3">
+            <p className="text-xs text-slate-300">
+              💡 <strong>팁:</strong> 샘플 데이터 버튼을 사용하면 빠르게 체험해볼 수 있습니다.
+            </p>
+          </div>
+        </div>
       </div>
     );
   }

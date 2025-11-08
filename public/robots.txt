@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+
+# Google AdSense 크롤러 허용
+User-agent: Mediapartners-Google
+Allow: /
+
+# Googlebot 허용
+User-agent: Googlebot
+Allow: /
+
+# Googlebot-Image 허용
+User-agent: Googlebot-Image
+Allow: /
+
+# 사이트맵 (있다면 추가)
+# Sitemap: https://yourdomain.com/sitemap.xml
+
