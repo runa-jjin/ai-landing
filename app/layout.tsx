@@ -31,8 +31,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko"> 
       <head>
-        {/* Google AdSense 메타태그 */}
-        <meta name="google-adsense-account" content="ca-pub-5471299059563255" />
         {/* 카카오 애드핏 스크립트 - <body> 시작 바로 위에 설치 (가이드 준수) */}
         {/* 제공된 스크립트 형식: //t1.daumcdn.net/kas/static/ba.min.js */}
         {kakaoAdFitKey && (
