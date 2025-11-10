@@ -1,16 +1,16 @@
 export default function TermsPage() {
   return (
-    <section className="card space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">이용약관</h1>
-        <p className="text-sm text-slate-400">
+    <section className="space-y-4 pt-24 max-w-6xl mx-auto px-4">
+      <div className="card space-y-2 p-3">
+        <h1 className="text-xl font-bold">이용약관</h1>
+        <p className="text-xs text-slate-400">
           최종 수정일: {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
       </div>
       
-      <div className="space-y-6 text-sm text-slate-300 leading-relaxed">
+      <div className="card space-y-3 p-3 text-xs text-slate-300 leading-relaxed">
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 1조 (목적)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 1조 (목적)</h2>
           <p>
             본 약관은 랜딩페이지 문구 자동 생성기(이하 "서비스")가 제공하는 AI 기반 문구 생성 서비스의 이용과 관련하여 
             서비스 제공자와 이용자 간의 권리, 의무 및 책임사항, 기타 필요한 사항을 규정함을 목적으로 합니다.
@@ -18,7 +18,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 2조 (용어의 정의)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 2조 (용어의 정의)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li><strong>"서비스"</strong>란 AI 기반 랜딩페이지 문구 자동 생성 서비스를 의미합니다.</li>
             <li><strong>"이용자"</strong>란 본 약관에 따라 서비스를 이용하는 회원 및 비회원을 의미합니다.</li>
@@ -28,7 +28,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 3조 (약관의 게시와 개정)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 3조 (약관의 게시와 개정)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>본 약관은 서비스 화면에 게시하거나 기타의 방법으로 이용자에게 공지함으로써 효력이 발생합니다.</li>
             <li>서비스 제공자는 필요한 경우 관련 법령을 위배하지 않는 범위에서 본 약관을 개정할 수 있습니다.</li>
@@ -38,7 +38,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 4조 (회원가입 및 계정 관리)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 4조 (회원가입 및 계정 관리)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>이용자는 Google 계정을 통해 회원가입을 할 수 있습니다.</li>
             <li>회원가입 시 제공하는 정보는 실제 정보를 기재해야 하며, 허위 정보를 제공한 경우 서비스 이용이 제한될 수 있습니다.</li>
@@ -48,7 +48,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 5조 (서비스의 제공 및 변경)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 5조 (서비스의 제공 및 변경)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>서비스 제공자는 다음과 같은 서비스를 제공합니다:
               <ul className="list-circle list-inside ml-6 mt-1 space-y-1">
@@ -63,7 +63,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 6조 (서비스의 중단)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 6조 (서비스의 중단)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>서비스 제공자는 컴퓨터 등 정보통신설비의 보수점검, 교체 및 고장, 통신의 두절 등의 사유가 발생한 경우에는 서비스의 제공을 일시적으로 중단할 수 있습니다.</li>
             <li>서비스 제공자는 제1항의 사유로 서비스의 제공이 일시적으로 중단됨으로 인하여 이용자 또는 제3자가 입은 손해에 대하여 배상합니다. 단, 서비스 제공자가 고의 또는 과실이 없음을 입증하는 경우에는 그러하지 아니합니다.</li>
@@ -72,7 +72,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 7조 (이용자의 의무)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 7조 (이용자의 의무)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>이용자는 다음 행위를 하여서는 안 됩니다:
               <ul className="list-circle list-inside ml-6 mt-1 space-y-1">
@@ -91,7 +91,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 8조 (요금 및 결제)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 8조 (요금 및 결제)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>서비스는 기본적으로 무료 체험을 제공하며, 무료 체험 한도는 서비스 내에 명시된 바에 따릅니다.</li>
             <li>무료 체험 한도 초과 시 유료 요금제를 이용할 수 있으며, 요금제의 종류 및 금액은 결제 페이지에 명시됩니다.</li>
@@ -102,7 +102,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 9조 (지적재산권)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 9조 (지적재산권)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>서비스 제공자가 작성한 저작물에 대한 저작권 및 기타 지적재산권은 서비스 제공자에 귀속됩니다.</li>
             <li>이용자가 서비스를 통해 생성한 콘텐츠에 대한 저작권은 이용자에게 귀속되며, 이용자는 해당 콘텐츠를 자유롭게 이용할 수 있습니다.</li>
@@ -112,7 +112,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 10조 (개인정보보호)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 10조 (개인정보보호)</h2>
           <p>
             서비스 제공자는 이용자의 개인정보 보호를 위하여 노력합니다. 이용자의 개인정보 보호에 관해서는 관련법령 및 
             서비스 제공자가 정하는 "개인정보처리방침"에 정한 바에 따릅니다.
@@ -120,7 +120,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 11조 (책임의 한계)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 11조 (책임의 한계)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>서비스 제공자는 천재지변 또는 이에 준하는 불가항력으로 인하여 서비스를 제공할 수 없는 경우에는 서비스 제공에 관한 책임이 면제됩니다.</li>
             <li>서비스 제공자는 회원의 귀책사유로 인한 서비스 이용의 장애에 대하여는 책임을 지지 않습니다.</li>
@@ -132,7 +132,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 12조 (분쟁의 해결)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 12조 (분쟁의 해결)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>서비스 제공자는 이용자가 제기하는 정당한 의견이나 불만을 반영하고 그 피해를 보상처리하기 위하여 피해보상처리기구를 설치·운영합니다.</li>
             <li>서비스 제공자와 이용자 간에 발생한 전자상거래 분쟁에 관한 소송은 제소 당시의 이용자의 주소에 의하고, 주소가 없는 경우에는 거소를 관할하는 지방법원의 전속관할로 합니다.</li>
@@ -141,7 +141,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">제 13조 (회원 탈퇴 및 자격 상실)</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">제 13조 (회원 탈퇴 및 자격 상실)</h2>
           <ul className="list-disc list-inside space-y-1 ml-4">
             <li>이용자는 언제든지 서비스 내 설정 메뉴를 통해 회원 탈퇴를 요청할 수 있으며, 서비스 제공자는 즉시 회원 탈퇴를 처리합니다.</li>
             <li>이용자가 다음 각 호의 사유에 해당하는 경우, 서비스 제공자는 회원 자격을 제한 및 정지시킬 수 있습니다:
@@ -156,7 +156,7 @@ export default function TermsPage() {
         </div>
 
         <div>
-          <h2 className="text-xl font-semibold text-slate-100 mb-3">부칙</h2>
+          <h2 className="text-lg font-semibold text-slate-100 mb-2">부칙</h2>
           <p>본 약관은 {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}부터 시행됩니다.</p>
         </div>
       </div>
