@@ -77,6 +77,14 @@ export default function Page() {
               {error}
             </div>
           )}
+          {/* 세로형 광고 (300x250) - 폼 영역 하단 */}
+          <div className="flex justify-center">
+            <KakaoAdFit 
+              unitId={process.env.NEXT_PUBLIC_KAKAO_ADFIT_SIDEBAR || "DAN-5abS5b0GyYPFBVzF"} 
+              width={300} 
+              height={250}
+            />
+          </div>
         </div>
         <div className="space-y-4">
           <div className="flex gap-2" role="tablist" aria-label="결과 및 미리보기 탭">
