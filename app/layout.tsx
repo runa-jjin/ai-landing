@@ -45,8 +45,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-slate-900 text-white antialiased">
         <StarryBackground />
-        <Header />
         <Providers>
+          <Header />
           <div className="relative z-10">
             {children}
             <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500 mt-16">
