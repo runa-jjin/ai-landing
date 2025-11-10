@@ -21,6 +21,11 @@ export function Header() {
             </a>
           </li>
           <li>
+            <a href="/generate" className="hover:text-blue-300 transition-colors">
+              생성하기
+            </a>
+          </li>
+          <li>
             <a href="/pricing" className="hover:text-blue-300 transition-colors">
               요금제
             </a>
