@@ -48,14 +48,14 @@ export function StarryBackground() {
     if (pathname === "/") {
       const objectsGroup = new THREE.Group();
       
-      // 다양한 기하학적 도형들 생성
+      // 다양한 기하학적 도형들 생성 (크기 증가)
       const geometries = [
-        new THREE.BoxGeometry(100, 100, 100),
-        new THREE.OctahedronGeometry(80, 0),
-        new THREE.TetrahedronGeometry(70, 0),
-        new THREE.IcosahedronGeometry(90, 0),
-        new THREE.TorusGeometry(60, 20, 16, 100),
-        new THREE.SphereGeometry(75, 32, 32),
+        new THREE.BoxGeometry(150, 150, 150),
+        new THREE.OctahedronGeometry(120, 0),
+        new THREE.TetrahedronGeometry(105, 0),
+        new THREE.IcosahedronGeometry(135, 0),
+        new THREE.TorusGeometry(90, 30, 16, 100),
+        new THREE.SphereGeometry(112, 32, 32),
       ];
 
       const colors = [
@@ -79,16 +79,25 @@ export function StarryBackground() {
 
         const mesh = new THREE.Mesh(geometry, material);
         
-        // 랜덤한 위치에 배치
-        mesh.position.x = (Math.random() - 0.5) * 1500;
-        mesh.position.y = (Math.random() - 0.5) * 1500;
-        mesh.position.z = (Math.random() - 0.5) * 1500;
+        // 화면 중앙을 기준으로 좌우로 균형있게 분배
+        const baseRadius = 1200; // 기본 반경 (화면에서 벗어나지 않게)
+        const spreadRadius = 400; // 분산 반경
+        const angle = (index / geometries.length) * Math.PI * 2; // 원형 배치 각도
         
-        // 랜덤한 회전 속도 저장
+        // 좌우로 분산 (X축 중심)
+        const xOffset = Math.cos(angle) * (baseRadius + (index % 3) * spreadRadius);
+        const yOffset = Math.sin(angle * 2) * 600; // 위아래 적당히 분산
+        const zOffset = (Math.random() - 0.5) * 800; // 앞뒤 적당히 분산
+        
+        mesh.position.x = xOffset;
+        mesh.position.y = yOffset;
+        mesh.position.z = zOffset;
+        
+        // 랜덤한 회전 속도 저장 (속도 증가)
         (mesh as any).rotationSpeed = {
-          x: (Math.random() - 0.5) * 0.02,
-          y: (Math.random() - 0.5) * 0.02,
-          z: (Math.random() - 0.5) * 0.02,
+          x: (Math.random() - 0.5) * 0.04,
+          y: (Math.random() - 0.5) * 0.04,
+          z: (Math.random() - 0.5) * 0.04,
         };
 
         objectsGroup.add(mesh);
@@ -173,10 +182,10 @@ export function StarryBackground() {
 
       const time = Date.now() * 0.0001;
 
-      // 메인 페이지인 경우 3D 도형들 회전
+      // 메인 페이지인 경우 3D 도형들 회전 (속도 증가)
       if (pathname === "/" && objectsRef.current instanceof THREE.Group) {
-        objectsRef.current.rotation.x = time * 0.1;
-        objectsRef.current.rotation.y = time * 0.15;
+        objectsRef.current.rotation.x = time * 0.2;
+        objectsRef.current.rotation.y = time * 0.3;
         
         // 각 도형을 개별적으로 회전
         objectsRef.current.children.forEach((child) => {
