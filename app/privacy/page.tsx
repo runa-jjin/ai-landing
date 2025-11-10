@@ -143,7 +143,7 @@ export default function PrivacyPage() {
           <h2 className="text-xl font-semibold text-slate-100 mb-3">10. 개인정보 보호책임자</h2>
           <p>개인정보 처리에 관한 문의사항이 있으시면 아래로 연락해 주시기 바랍니다.</p>
           <div className="bg-slate-800/50 p-4 rounded-lg mt-2">
-            <p><strong>이메일:</strong> support@example.com</p>
+            <p><strong>이메일:</strong> tears0427@gmail.com</p>
             <p className="mt-1"><strong>처리 기간:</strong> 접수일로부터 10일 이내</p>
           </div>
         </div>
