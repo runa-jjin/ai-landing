@@ -11,9 +11,11 @@ export function StarryBackground() {
   const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
   const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
   const objectsRef = useRef<THREE.Group | null>(null);
+  const particlesRef = useRef<THREE.Points | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const mouseXRef = useRef(0);
   const mouseYRef = useRef(0);
+  const scrollYRef = useRef(0);
   const windowHalfXRef = useRef(0);
   const windowHalfYRef = useRef(0);
 
@@ -93,6 +95,9 @@ export function StarryBackground() {
         mesh.position.y = yOffset;
         mesh.position.z = zOffset;
         
+        // 초기 위치 저장 (마우스 따라다니기용)
+        (mesh as any).initialPosition = { x: xOffset, y: yOffset, z: zOffset };
+        
         // 랜덤한 회전 속도 저장 (속도 증가)
         (mesh as any).rotationSpeed = {
           x: (Math.random() - 0.5) * 0.04,
@@ -118,11 +123,13 @@ export function StarryBackground() {
       scene.add(objectsGroup);
       objectsRef.current = objectsGroup;
     } else {
-      // 다른 페이지에서는 입자 시스템 사용 (별 개수 줄임)
-      const particleCount = 2000;
+      // 다른 페이지에서는 정교한 입자 시스템 사용
+      const particleCount = 3000; // 입자 개수 증가
       const geometry = new THREE.BufferGeometry();
       const positions = new Float32Array(particleCount * 3);
       const colors = new Float32Array(particleCount * 3);
+      const sizes = new Float32Array(particleCount);
+      const velocities = new Float32Array(particleCount * 3);
 
       const color = new THREE.Color();
 
@@ -135,8 +142,20 @@ export function StarryBackground() {
         positions[i * 3 + 1] = y;
         positions[i * 3 + 2] = z;
 
-        const t = (i / particleCount) * 0.5 + 0.5;
-        color.setHSL(0.5 + t * 0.1, 0.7, 0.6);
+        // 다양한 크기의 입자
+        sizes[i] = Math.random() * 2 + 0.5;
+
+        // 속도 저장 (움직임 효과용)
+        velocities[i * 3] = (Math.random() - 0.5) * 0.5;
+        velocities[i * 3 + 1] = (Math.random() - 0.5) * 0.5;
+        velocities[i * 3 + 2] = (Math.random() - 0.5) * 0.5;
+
+        // 더 정교한 그라데이션 색상
+        const t = (i / particleCount);
+        const hue = 0.5 + t * 0.15; // 더 넓은 색상 범위
+        const saturation = 0.6 + Math.random() * 0.3;
+        const lightness = 0.5 + Math.random() * 0.3;
+        color.setHSL(hue, saturation, lightness);
 
         colors[i * 3] = color.r;
         colors[i * 3 + 1] = color.g;
@@ -145,17 +164,23 @@ export function StarryBackground() {
 
       geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
       geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+      (geometry as any).velocities = velocities; // 속도 저장
+      (geometry as any).sizes = sizes; // 크기 저장
 
+      // 더 정교한 입자 효과
       const material = new THREE.PointsMaterial({
-        size: 1.5,
+        size: 2,
+        sizeAttenuation: true,
         vertexColors: true,
         transparent: true,
-        opacity: 0.8,
+        opacity: 0.9,
         blending: THREE.AdditiveBlending,
+        depthWrite: false,
       });
 
       const particles = new THREE.Points(geometry, material);
       scene.add(particles);
+      particlesRef.current = particles;
       objectsRef.current = particles as any;
     }
 
@@ -182,30 +207,62 @@ export function StarryBackground() {
 
       const time = Date.now() * 0.0001;
 
-      // 메인 페이지인 경우 3D 도형들 회전 (속도 증가)
+      // 메인 페이지인 경우 3D 도형들 회전 및 마우스 따라다니기
       if (pathname === "/" && objectsRef.current instanceof THREE.Group) {
-        objectsRef.current.rotation.x = time * 0.2;
-        objectsRef.current.rotation.y = time * 0.3;
+        // 스크롤에 반응하는 회전
+        const scrollFactor = scrollYRef.current * 0.0001;
+        objectsRef.current.rotation.x = time * 0.2 + scrollFactor;
+        objectsRef.current.rotation.y = time * 0.3 + scrollFactor * 0.5;
         
-        // 각 도형을 개별적으로 회전
-        objectsRef.current.children.forEach((child) => {
+        // 각 도형을 개별적으로 회전 및 마우스 따라다니기
+        objectsRef.current.children.forEach((child, index) => {
           if (child instanceof THREE.Mesh && (child as any).rotationSpeed) {
             child.rotation.x += (child as any).rotationSpeed.x;
             child.rotation.y += (child as any).rotationSpeed.y;
             child.rotation.z += (child as any).rotationSpeed.z;
+            
+            // 마우스 따라다니는 효과 (각 도형마다 다른 반응 속도)
+            const followSpeed = 0.03 + index * 0.01;
+            const initialPos = (child as any).initialPosition;
+            if (initialPos) {
+              const targetX = initialPos.x + mouseXRef.current * (0.3 + index * 0.1);
+              const targetY = initialPos.y + (-mouseYRef.current) * (0.3 + index * 0.1);
+              
+              child.position.x += (targetX - child.position.x) * followSpeed;
+              child.position.y += (targetY - child.position.y) * followSpeed;
+            }
           }
         });
-      } else if (objectsRef.current instanceof THREE.Points) {
-        // 입자 회전
-        objectsRef.current.rotation.x = time * 0.2;
-        objectsRef.current.rotation.y = time * 0.15;
+      } else if (particlesRef.current) {
+        // 정교한 입자 효과 - 움직임과 회전
+        particlesRef.current.rotation.x = time * 0.2;
+        particlesRef.current.rotation.y = time * 0.15;
+        
+        // 입자 위치 업데이트 (부드러운 움직임)
+        const positions = particlesRef.current.geometry.attributes.position;
+        const velocities = (particlesRef.current.geometry as any).velocities;
+        
+        if (positions && velocities) {
+          for (let i = 0; i < positions.count; i++) {
+            positions.array[i * 3] += velocities[i * 3] * 0.1;
+            positions.array[i * 3 + 1] += velocities[i * 3 + 1] * 0.1;
+            positions.array[i * 3 + 2] += velocities[i * 3 + 2] * 0.1;
+            
+            // 경계 처리
+            if (Math.abs(positions.array[i * 3]) > 1000) velocities[i * 3] *= -1;
+            if (Math.abs(positions.array[i * 3 + 1]) > 1000) velocities[i * 3 + 1] *= -1;
+            if (Math.abs(positions.array[i * 3 + 2]) > 1000) velocities[i * 3 + 2] *= -1;
+          }
+          positions.needsUpdate = true;
+        }
       }
 
-      // 카메라가 마우스 위치를 천천히 따라가도록
-      cameraRef.current.position.x +=
-        (mouseXRef.current - cameraRef.current.position.x) * 0.02;
-      cameraRef.current.position.y +=
-        (-mouseYRef.current - cameraRef.current.position.y) * 0.02;
+      // 카메라가 마우스 위치와 스크롤에 반응
+      const targetX = mouseXRef.current + scrollYRef.current * 0.1;
+      const targetY = -mouseYRef.current - scrollYRef.current * 0.05;
+      
+      cameraRef.current.position.x += (targetX - cameraRef.current.position.x) * 0.02;
+      cameraRef.current.position.y += (targetY - cameraRef.current.position.y) * 0.02;
       cameraRef.current.lookAt(scene.position);
 
       rendererRef.current.render(scene, cameraRef.current);
@@ -239,7 +296,13 @@ export function StarryBackground() {
       }
     };
 
+    // 스크롤 이벤트 리스너
+    const onScroll = () => {
+      scrollYRef.current = window.scrollY;
+    };
+
     window.addEventListener("resize", onWindowResize, false);
+    window.addEventListener("scroll", onScroll, { passive: true });
     document.addEventListener("mousemove", onDocumentMouseMove, false);
     document.addEventListener("touchmove", onTouchMove, { passive: false });
 
@@ -247,6 +310,7 @@ export function StarryBackground() {
 
     return () => {
       window.removeEventListener("resize", onWindowResize);
+      window.removeEventListener("scroll", onScroll);
       document.removeEventListener("mousemove", onDocumentMouseMove);
       document.removeEventListener("touchmove", onTouchMove);
       if (animationIdRef.current) {

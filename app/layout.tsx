@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         )}
       </head>
-      <body className="bg-slate-900 text-white antialiased">
+      <body className="bg-black text-white antialiased">
         <StarryBackground />
         <Providers>
           <Header />
