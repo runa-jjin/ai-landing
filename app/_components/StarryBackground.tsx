@@ -50,77 +50,99 @@ export function StarryBackground() {
     if (pathname === "/") {
       const objectsGroup = new THREE.Group();
       
-      // Active Theory 스타일의 기둥 형태 도형들 생성
-      const geometries = [
-        new THREE.CylinderGeometry(40, 40, 800, 32), // 긴 기둥
-        new THREE.CylinderGeometry(35, 35, 700, 32),
-        new THREE.CylinderGeometry(45, 45, 900, 32),
-        new THREE.CylinderGeometry(30, 30, 600, 32),
-        new THREE.CylinderGeometry(50, 50, 1000, 32),
-        new THREE.CylinderGeometry(38, 38, 750, 32),
+      // 세련된 부드러운 3D 오브젝트들 생성
+      const objectConfigs = [
+        { type: 'sphere', radius: 120, segments: 64, color: 0x4fc3f7 },
+        { type: 'icosahedron', radius: 100, detail: 2, color: 0x29b6f6 },
+        { type: 'octahedron', radius: 110, detail: 1, color: 0x03a9f4 },
+        { type: 'torus', radius: 80, tube: 30, segments: 64, color: 0x00acc1 },
+        { type: 'sphere', radius: 95, segments: 64, color: 0x00bcd4 },
+        { type: 'dodecahedron', radius: 105, detail: 1, color: 0x26c6da },
       ];
 
-      const baseColors = [
-        new THREE.Color(0x4fc3f7), // blue-300
-        new THREE.Color(0x29b6f6), // blue-400
-        new THREE.Color(0x03a9f4), // blue-500
-        new THREE.Color(0x00acc1), // cyan-600
-        new THREE.Color(0x00bcd4), // cyan-500
-        new THREE.Color(0x26c6da), // cyan-400
-      ];
+      objectConfigs.forEach((config, index) => {
+        let geometry: THREE.BufferGeometry;
+        
+        switch (config.type) {
+          case 'sphere':
+            geometry = new THREE.SphereGeometry(config.radius, config.segments, config.segments);
+            break;
+          case 'icosahedron':
+            geometry = new THREE.IcosahedronGeometry(config.radius, config.detail);
+            break;
+          case 'octahedron':
+            geometry = new THREE.OctahedronGeometry(config.radius, config.detail);
+            break;
+          case 'torus':
+            geometry = new THREE.TorusGeometry(config.radius, config.tube, 64, 100);
+            break;
+          case 'dodecahedron':
+            geometry = new THREE.DodecahedronGeometry(config.radius, config.detail);
+            break;
+          default:
+            geometry = new THREE.SphereGeometry(config.radius, 64, 64);
+        }
 
-      geometries.forEach((geometry, index) => {
-        const material = new THREE.MeshPhongMaterial({
-          color: baseColors[index],
+        // 부드럽고 세련된 머티리얼
+        const material = new THREE.MeshStandardMaterial({
+          color: config.color,
           transparent: true,
-          opacity: 0.7,
-          wireframe: true,
-          emissive: baseColors[index],
-          emissiveIntensity: 0.4,
+          opacity: 0.6,
+          metalness: 0.7,
+          roughness: 0.3,
+          emissive: config.color,
+          emissiveIntensity: 0.2,
+          side: THREE.DoubleSide,
         });
 
         const mesh = new THREE.Mesh(geometry, material);
         
-        // 화면 중앙을 기준으로 좌우로 균형있게 분배
-        const baseRadius = 1000;
-        const spreadRadius = 300;
-        const angle = (index / geometries.length) * Math.PI * 2;
+        // 화면 중앙을 기준으로 균형있게 분배
+        const baseRadius = 1200;
+        const spreadRadius = 400;
+        const angle = (index / objectConfigs.length) * Math.PI * 2;
         
-        // 좌우로 분산 (X축 중심)
         const xOffset = Math.cos(angle) * (baseRadius + (index % 3) * spreadRadius);
-        const yOffset = 0; // 기둥은 Y축 중앙에 배치
-        const zOffset = (Math.random() - 0.5) * 600;
+        const yOffset = Math.sin(angle * 2) * 500;
+        const zOffset = (Math.random() - 0.5) * 800;
         
         mesh.position.x = xOffset;
         mesh.position.y = yOffset;
         mesh.position.z = zOffset;
         
-        // CylinderGeometry는 기본적으로 세로로 서 있음 (rotation 불필요)
-        
-        // 초기 위치 저장 (마우스 따라다니기용)
+        // 초기 위치 저장
         (mesh as any).initialPosition = { x: xOffset, y: yOffset, z: zOffset };
         
-        // 랜덤한 회전 속도 저장
+        // 부드러운 회전 속도
         (mesh as any).rotationSpeed = {
-          x: (Math.random() - 0.5) * 0.03,
-          y: (Math.random() - 0.5) * 0.05,
-          z: (Math.random() - 0.5) * 0.02,
+          x: (Math.random() - 0.5) * 0.02,
+          y: (Math.random() - 0.5) * 0.03,
+          z: (Math.random() - 0.5) * 0.015,
         };
 
         objectsGroup.add(mesh);
       });
 
-      // 조명 추가
-      const ambientLight = new THREE.AmbientLight(0x404040, 0.5);
+      // 세련된 조명 설정
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
       scene.add(ambientLight);
       
-      const pointLight1 = new THREE.PointLight(0x4fc3f7, 1, 2000);
-      pointLight1.position.set(500, 500, 500);
+      // 부드러운 포인트 라이트들
+      const pointLight1 = new THREE.PointLight(0x4fc3f7, 1.5, 3000);
+      pointLight1.position.set(800, 600, 800);
       scene.add(pointLight1);
       
-      const pointLight2 = new THREE.PointLight(0x00bcd4, 1, 2000);
-      pointLight2.position.set(-500, -500, -500);
+      const pointLight2 = new THREE.PointLight(0x00bcd4, 1.5, 3000);
+      pointLight2.position.set(-800, -600, -800);
       scene.add(pointLight2);
+      
+      const pointLight3 = new THREE.PointLight(0x26c6da, 1, 2500);
+      pointLight3.position.set(0, 0, 1000);
+      scene.add(pointLight3);
+      
+      // 헤미스피어 라이트로 부드러운 조명 추가
+      const hemisphereLight = new THREE.HemisphereLight(0x4fc3f7, 0x00acc1, 0.3);
+      scene.add(hemisphereLight);
 
       scene.add(objectsGroup);
       objectsRef.current = objectsGroup;
