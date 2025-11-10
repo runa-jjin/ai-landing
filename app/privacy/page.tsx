@@ -88,6 +88,10 @@ export default function PrivacyPage() {
                 Google의 개인정보 처리 방침은 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://policies.google.com/privacy</a>에서 확인할 수 있습니다.
               </li>
               <li>
+                <strong>카카오 애드핏:</strong> 광고 서비스 제공을 위해 쿠키 및 광고 식별자를 사용합니다. 
+                카카오의 개인정보 처리 방침은 <a href="https://www.kakao.com/policy/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://www.kakao.com/policy/privacy</a>에서 확인할 수 있습니다.
+              </li>
+              <li>
                 <strong>Google OAuth:</strong> 회원 인증을 위해 Google 계정 정보를 사용합니다. 
                 Google의 개인정보 처리 방침은 <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">https://policies.google.com/privacy</a>에서 확인할 수 있습니다.
               </li>

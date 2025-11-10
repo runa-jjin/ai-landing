@@ -33,14 +33,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         {/* Google AdSense 메타태그 */}
         <meta name="google-adsense-account" content="ca-pub-5471299059563255" />
-        
-        {/* 카카오 애드핏 */}
-        {kakaoAdFitKey && (
-          <Script
-            src="https://t1.daumcdn.net/kas/static/ba.min.js"
-            strategy="lazyOnload"
-          />
-        )}
       </head>
       <body className="antialiased">
         <StarryBackground />
@@ -63,6 +55,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </footer>
           </div>
         </Providers>
+        {/* 카카오 애드핏 스크립트 - </body> 바로 위에 설치 (가이드 준수) */}
+        {/* 제공된 스크립트 형식: //t1.daumcdn.net/kas/static/ba.min.js */}
+        {kakaoAdFitKey && (
+          <Script
+            src="//t1.daumcdn.net/kas/static/ba.min.js"
+            strategy="afterInteractive"
+            async
+          />
+        )}
       </body>
     </html>
   );

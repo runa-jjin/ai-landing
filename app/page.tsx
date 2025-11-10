@@ -5,6 +5,7 @@ import { Form } from "./_components/Form";
 import { ResultCards } from "./_components/ResultCards";
 import { Preview } from "./_components/Preview";
 import { UsageGuard } from "./_components/UsageGuard";
+import { KakaoAdFit } from "./_components/Ads";
 import { useAppStore } from "@/store/useAppStore";
 
 function LoadingPlaceholder() {
@@ -28,6 +29,16 @@ export default function Page() {
       <UsageGuard>
         {() => null}
       </UsageGuard>
+      
+      {/* 가로형 배너 광고 (728x90) - 헤더 하단 */}
+      <div className="flex justify-center my-4">
+        <KakaoAdFit 
+          unitId={process.env.NEXT_PUBLIC_KAKAO_ADFIT_BANNER || "DAN-zg0CutQkojopfMIc"} 
+          width={728} 
+          height={90}
+          className="max-w-full"
+        />
+      </div>
       
       {/* 서비스 소개 섹션 */}
       <section className="card space-y-4 mb-8" aria-label="서비스 소개">

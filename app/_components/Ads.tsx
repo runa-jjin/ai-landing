@@ -53,48 +53,49 @@ export function AdSense({ adSlot, adFormat = "auto", style, className }: AdSense
 
 interface KakaoAdFitProps {
   unitId: string;
+  width?: number;
+  height?: number;
   className?: string;
   style?: React.CSSProperties;
+  onFail?: string; // NO-AD 콜백 함수명 (선택사항)
 }
 
 /**
- * 카카오 애드핏 광고 컴포넌트
+ * 카카오 애드핏 광고 컴포넌트 (공식 가이드 준수)
  * 
  * 사용법:
- * <KakaoAdFit unitId="DAN-xxxxxxxxxx" />
+ * <KakaoAdFit unitId="DAN-xxxxxxxxxx" width={300} height={250} />
+ * 
+ * NO-AD 콜백 사용:
+ * <KakaoAdFit unitId="DAN-xxxxxxxxxx" width={300} height={250} onFail="callBackFunc" />
  */
-export function KakaoAdFit({ unitId, className, style }: KakaoAdFitProps) {
-  const adRef = useRef<HTMLDivElement>(null);
-  const initialized = useRef(false);
-
-  useEffect(() => {
-    if (!unitId || !adRef.current || initialized.current) return;
-
-    const loadAd = () => {
-      if (window.kakao && window.kakao.AdFit) {
-        try {
-          new window.kakao.AdFit({
-            unitId: unitId,
-            container: adRef.current!,
-          });
-          initialized.current = true;
-        } catch (error) {
-          console.error("[KakaoAdFit] Error loading ad:", error);
-        }
-      } else {
-        // 스크립트가 아직 로드되지 않았으면 재시도
-        setTimeout(loadAd, 100);
-      }
-    };
-
-    loadAd();
-  }, [unitId]);
-
+export function KakaoAdFit({ 
+  unitId, 
+  width = 300, 
+  height = 250, 
+  className, 
+  style,
+  onFail 
+}: KakaoAdFitProps) {
   if (!unitId) {
     return null;
   }
 
-  return <div ref={adRef} className={className} style={style} />;
+  // 카카오 애드핏 공식 가이드에 따른 HTML 태그 직접 사용
+  // 제공된 스크립트 형식 그대로 사용 (width:100% 제거)
+  return (
+    <ins 
+      className={`kakao_ad_area ${className || ""}`}
+      style={{ 
+        display: "none",
+        ...style 
+      }}
+      data-ad-unit={unitId}
+      data-ad-width={width}
+      data-ad-height={height}
+      {...(onFail && { "data-ad-onfail": onFail })}
+    />
+  );
 }
 
 // TypeScript 타입 선언
