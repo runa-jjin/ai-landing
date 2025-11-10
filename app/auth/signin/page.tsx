@@ -71,13 +71,40 @@ function SignInContent() {
   }
 
   return (
-    <section className="flex min-h-[60vh] items-center justify-center">
-      <div className="card w-full max-w-md space-y-6">
+    <section className="space-y-8">
+      {/* 서비스 소개 섹션 */}
+      <div className="card space-y-4">
         <div className="text-center">
-          <h2 className="text-2xl font-bold">로그인</h2>
-          <p className="mt-2 text-sm text-slate-400">
-            소셜 계정으로 간편하게 로그인하세요
+          <h1 className="text-3xl font-bold text-white mb-2">AI 기반 랜딩페이지 문구 자동 생성기</h1>
+          <p className="text-base text-slate-300 leading-relaxed">
+            브랜드 정보만 입력하면 AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다. 
+            헤드라인, 서브헤드, 주요 혜택, 고객 사례, FAQ 등 완성도 높은 마케팅 카피를 즉시 받아보세요.
           </p>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+          <div className="space-y-2 text-center">
+            <h3 className="text-base font-semibold text-primary">⚡ 빠른 생성</h3>
+            <p className="text-sm text-slate-400">몇 분 안에 전문적인 랜딩페이지 문구 완성</p>
+          </div>
+          <div className="space-y-2 text-center">
+            <h3 className="text-base font-semibold text-primary">🎯 브랜드 맞춤</h3>
+            <p className="text-sm text-slate-400">업종과 톤앤매너에 맞는 개인화된 카피</p>
+          </div>
+          <div className="space-y-2 text-center">
+            <h3 className="text-base font-semibold text-primary">📋 완성형 결과</h3>
+            <p className="text-sm text-slate-400">헤드라인부터 FAQ까지 모든 요소 포함</p>
+          </div>
+        </div>
+      </div>
+
+      {/* 로그인 폼 */}
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <div className="card w-full max-w-md space-y-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold">로그인</h2>
+            <p className="mt-2 text-sm text-slate-400">
+              소셜 계정으로 간편하게 로그인하세요
+            </p>
           {error && (
             <div className="mt-4 rounded-lg bg-rose-500/10 border border-rose-500/50 px-4 py-3 text-sm text-rose-200 space-y-2">
               <div className="font-semibold">로그인 중 오류가 발생했습니다</div>
@@ -156,6 +183,42 @@ function SignInContent() {
         <p className="text-center text-xs text-slate-400">
           무료 체험 3회 제공
         </p>
+      </div>
+      </div>
+
+      {/* 서비스 특징 섹션 */}
+      <div className="card space-y-4">
+        <h2 className="text-xl font-bold text-white">✨ 서비스 특징</h2>
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">🤖 AI 기반 자동 생성</h3>
+            <p className="text-sm text-slate-300">
+              최신 AI 기술을 활용하여 브랜드에 맞는 전문적인 마케팅 문구를 자동으로 생성합니다. 
+              수작업으로 작성하는 데 걸리는 시간을 대폭 단축할 수 있습니다.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">📝 완성형 카피 제공</h3>
+            <p className="text-sm text-slate-300">
+              헤드라인, 서브헤드, 주요 혜택, 고객 사례, FAQ 등 랜딩페이지에 필요한 모든 요소를 
+              한 번에 생성하여 제공합니다.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">💼 다양한 업종 지원</h3>
+            <p className="text-sm text-slate-300">
+              이커머스, SaaS, 교육, 헬스케어, 금융, 부동산, 음식점, 뷰티 등 모든 업종의 
+              랜딩페이지 문구를 생성할 수 있습니다.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">🆓 무료 체험 제공</h3>
+            <p className="text-sm text-slate-300">
+              회원가입 후 즉시 무료로 3회 체험할 수 있습니다. 서비스 품질을 직접 확인한 후 
+              유료 플랜으로 업그레이드하세요.
+            </p>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     description: "AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다.",
     type: "website",
   },
+  other: {
+    "google-adsense-account": "ca-pub-5471299059563255",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko"> 
       <head>
-        {/* Google AdSense */}
+        {/* Google AdSense 메타태그 */}
         <meta name="google-adsense-account" content="ca-pub-5471299059563255" />
         
         {/* 카카오 애드핏 */}
@@ -46,7 +49,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Header />
             <main className="flex-1 pb-16">{children}</main> 
             <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500">
-              © {new Date().getFullYear()} 랜딩페이지 문구 생성기. All rights reserved.
+              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                <div>© {new Date().getFullYear()} 랜딩페이지 문구 생성기. All rights reserved.</div>
+                <div className="flex gap-4">
+                  <a href="/privacy" className="hover:text-slate-300 transition-colors">
+                    개인정보처리방침
+                  </a>
+                  <a href="/terms" className="hover:text-slate-300 transition-colors">
+                    이용약관
+                  </a>
+                </div>
+              </div>
             </footer>
           </div>
         </Providers>

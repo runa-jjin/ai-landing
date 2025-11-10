@@ -2,30 +2,76 @@ export default function PaymentInfoPage() {
   return (
     <section className="space-y-8">
       <div className="card space-y-4 text-center">
-        <h2 className="text-3xl font-semibold">결제 안내</h2>
-        <p className="text-sm text-slate-300">
-          프로 요금제 이용을 위한 송금 안내입니다.
+        <h1 className="text-3xl font-bold">결제 안내</h1>
+        <p className="text-base text-slate-300 leading-relaxed">
+          프로 요금제 이용을 위한 결제 안내입니다. 카카오페이를 통해 간편하게 결제하실 수 있으며, 
+          결제 후 24시간 내 계정이 업그레이드됩니다.
         </p>
       </div>
 
-      <div className="card space-y-6 max-w-2xl mx-auto">
-        <div className="space-y-4">
-          <h3 className="text-xl font-semibold text-primary">💳 프로 요금제</h3>
-          <div className="grid gap-2 text-sm">
-            <div className="flex justify-between py-2 border-b border-slate-800">
-              <span className="text-slate-400">월 이용료</span>
-              <span className="font-semibold">₩19,000</span>
+      {/* 프로 요금제 상세 정보 */}
+      <div className="card space-y-6">
+        <h2 className="text-2xl font-bold text-white">💎 프로 요금제 상세 정보</h2>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-slate-100 mb-2">📊 포함된 기능</h3>
+              <ul className="space-y-2 text-sm text-slate-300">
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                  <span>무제한 카피 생성 (월 제한 없음)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                  <span>JSON 스키마 기반 상세 결과 제공</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                  <span>브랜드 보이스 요약 제공</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                  <span>팀 공유 링크 기능</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                  <span>CSV 내보내기 기능</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="mt-1 h-2 w-2 rounded-full bg-primary" aria-hidden="true" />
+                  <span>우선 고객 지원</span>
+                </li>
+              </ul>
             </div>
-            <div className="flex justify-between py-2 border-b border-slate-800">
-              <span className="text-slate-400">생성 횟수</span>
-              <span className="font-semibold">무제한</span>
-            </div>
-            <div className="flex justify-between py-2">
-              <span className="text-slate-400">지원 기능</span>
-              <span className="font-semibold">모든 기능</span>
+          </div>
+          <div className="space-y-4">
+            <div>
+              <h3 className="font-semibold text-slate-100 mb-2">💰 요금 정보</h3>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between py-2 border-b border-slate-800">
+                  <span className="text-slate-400">월 이용료</span>
+                  <span className="font-semibold text-primary">₩19,000</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-800">
+                  <span className="text-slate-400">결제 주기</span>
+                  <span className="font-semibold">월간 자동 결제</span>
+                </div>
+                <div className="flex justify-between py-2 border-b border-slate-800">
+                  <span className="text-slate-400">무료 체험</span>
+                  <span className="font-semibold">월 3회 제공</span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-slate-400">환불 정책</span>
+                  <span className="font-semibold">이용 시작 전 가능</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="card space-y-6 max-w-2xl mx-auto">
+        <h2 className="text-2xl font-bold text-white">💳 결제 방법</h2>
 
         <div className="rounded-lg bg-slate-800/50 p-6 space-y-4">
           <h4 className="font-semibold text-lg">📤 송금 방법</h4>
@@ -92,6 +138,48 @@ export default function PaymentInfoPage() {
           <p>• 송금 전 이메일 주소를 정확히 확인해주세요.</p>
           <p>• 환불은 이용 시작 전에만 가능합니다.</p>
           <p>• 문의사항은 tears0427@gmail.com으로 연락주세요.</p>
+        </div>
+      </div>
+
+      {/* 자주 묻는 질문 */}
+      <div className="card space-y-4">
+        <h2 className="text-2xl font-bold text-white">❓ 결제 관련 자주 묻는 질문</h2>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">Q1. 결제 후 언제부터 사용할 수 있나요?</h3>
+            <p className="text-sm text-slate-300">
+              결제 확인 후 24시간 이내에 계정이 업그레이드됩니다. 이메일로 입금 정보를 보내주시면 
+              빠르게 처리해드립니다.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">Q2. 자동 결제가 되나요?</h3>
+            <p className="text-sm text-slate-300">
+              현재는 수동 결제 방식을 사용하고 있습니다. 매월 결제일 전에 안내 메일을 보내드리며, 
+              카카오페이를 통해 간편하게 결제하실 수 있습니다.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">Q3. 환불이 가능한가요?</h3>
+            <p className="text-sm text-slate-300">
+              이용 시작 전에만 환불이 가능합니다. 「전자상거래 등에서의 소비자 보호에 관한 법률」에 따라 
+              환불이 처리됩니다. 환불 요청은 tears0427@gmail.com으로 문의해주세요.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">Q4. 다른 결제 수단을 사용할 수 있나요?</h3>
+            <p className="text-sm text-slate-300">
+              현재는 카카오페이를 통한 결제만 지원하고 있습니다. 다른 결제 수단이 필요하시면 
+              tears0427@gmail.com으로 문의해주세요.
+            </p>
+          </div>
+          <div className="space-y-2">
+            <h3 className="font-semibold text-slate-100">Q5. 프로 요금제를 취소할 수 있나요?</h3>
+            <p className="text-sm text-slate-300">
+              언제든지 프로 요금제를 취소하실 수 있습니다. 취소하시면 다음 결제 주기부터 
+              무료 플랜으로 전환되며, 이미 결제된 기간은 그대로 사용하실 수 있습니다.
+            </p>
+          </div>
         </div>
       </div>
     </section>
