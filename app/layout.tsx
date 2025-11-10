@@ -49,7 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Header />
           <div className="relative z-10">
             {children}
-            <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500 mt-16">
+            <footer className="border-t border-slate-800 pt-8 pb-12 text-xs text-slate-500 mt-16">
               <div className="container mx-auto max-w-7xl px-6">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div>© {new Date().getFullYear()} 랜딩페이지 문구 생성기. All rights reserved.</div>

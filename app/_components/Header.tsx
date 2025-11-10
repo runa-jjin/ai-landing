@@ -8,13 +8,13 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-20 bg-slate-900/70 backdrop-blur-md border-b border-slate-800">
-      <nav className="container mx-auto max-w-7xl flex justify-between items-center p-4 text-white">
+      <nav className="container mx-auto max-w-7xl flex justify-between items-center py-5 px-4 text-white">
         {/* 로고/사이트명 */}
         <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-300">
           랜딩페이지 문구 자동 생성기
         </div>
         {/* 네비게이션 메뉴 */}
-        <ul className="flex space-x-6 text-sm font-medium items-center">
+        <ul className="flex space-x-6 text-base font-medium items-center">
           <li>
             <a href="/" className="hover:text-blue-300 transition-colors">
               홈
@@ -52,7 +52,7 @@ export function Header() {
             <li>
               <Link
                 href="/auth/signin"
-                className="bg-blue-600 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-500 transition-colors"
+                className="bg-blue-600 px-4 py-2 rounded-lg text-base font-semibold text-white hover:bg-blue-500 transition-colors"
               >
                 로그인
               </Link>

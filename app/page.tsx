@@ -41,7 +41,7 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/generate"
-              className="bg-blue-600 px-8 py-4 rounded-lg text-lg font-semibold hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/40 hover:shadow-blue-500/50"
+              className="bg-blue-600 px-8 py-4 rounded-lg text-lg font-semibold text-white hover:bg-blue-500 transition-colors shadow-lg shadow-blue-600/40 hover:shadow-blue-500/50"
             >
               지금 시작하기
             </Link>
