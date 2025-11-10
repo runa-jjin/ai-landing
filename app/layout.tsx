@@ -43,22 +43,24 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           />
         )}
       </head>
-      <body className="antialiased">
+      <body className="bg-slate-900 text-white antialiased">
         <StarryBackground />
+        <Header />
         <Providers>
-          <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col gap-10 px-6 py-10"> 
-            <Header />
-            <main className="flex-1 pb-16">{children}</main> 
-            <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div>© {new Date().getFullYear()} 랜딩페이지 문구 생성기. All rights reserved.</div>
-                <div className="flex gap-4">
-                  <a href="/privacy" className="hover:text-slate-300 transition-colors">
-                    개인정보처리방침
-                  </a>
-                  <a href="/terms" className="hover:text-slate-300 transition-colors">
-                    이용약관
-                  </a>
+          <div className="relative z-10">
+            {children}
+            <footer className="border-t border-slate-800 pt-6 text-xs text-slate-500 mt-16">
+              <div className="container mx-auto max-w-7xl px-6">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+                  <div>© {new Date().getFullYear()} 랜딩페이지 문구 생성기. All rights reserved.</div>
+                  <div className="flex gap-4">
+                    <a href="/privacy" className="hover:text-slate-300 transition-colors">
+                      개인정보처리방침
+                    </a>
+                    <a href="/terms" className="hover:text-slate-300 transition-colors">
+                      이용약관
+                    </a>
+                  </div>
                 </div>
               </div>
             </footer>
