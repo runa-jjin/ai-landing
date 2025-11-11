@@ -20,7 +20,7 @@ export function Header() {
             className="h-10 w-auto"
             priority
           />
-          <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-teal-300">
+          <div className="text-2xl font-bold gradient-text">
             랜딩페이지 문구 자동 생성기
           </div>
         </Link>
