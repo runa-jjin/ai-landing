@@ -91,6 +91,7 @@ export default function GeneratePage() {
           </div>
         </div>
       </div>
+      </div>
 
       {/* 사용 가이드 섹션 */}
       <section className="relative z-10 container mx-auto max-w-7xl px-6 mt-12">
@@ -127,8 +128,6 @@ export default function GeneratePage() {
           </div>
         </div>
       </section>
-
-      </div>
 
       {/* FAQ 섹션 */}
       <section className="relative z-10 container mx-auto max-w-7xl px-6 mt-8">
