@@ -115,7 +115,7 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center pt-24">
         <form onSubmit={handleLogin} className="card w-full max-w-md space-y-6">
           <div className="text-center">
             <h1 className="text-2xl font-bold">🔐 관리자 로그인</h1>
@@ -143,7 +143,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-6 py-8">
+    <div className="mx-auto max-w-7xl space-y-6 px-4 pt-24 pb-8">
       <div className="card space-y-4">
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold">👤 사용자 관리</h1>
