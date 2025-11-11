@@ -62,7 +62,9 @@ export default function PaymentInfoPage() {
                 </div>
                 <div className="flex justify-between py-2">
                   <span className="text-slate-400">환불 정책</span>
-                  <span className="font-semibold">이용 시작 전 가능</span>
+                  <a href="/refund" className="font-semibold text-primary hover:underline">
+                    환불 규정 보기
+                  </a>
                 </div>
               </div>
             </div>
@@ -163,7 +165,8 @@ export default function PaymentInfoPage() {
             <h3 className="font-semibold text-slate-100">Q3. 환불이 가능한가요?</h3>
             <p className="text-sm text-slate-300">
               이용 시작 전에만 환불이 가능합니다. 「전자상거래 등에서의 소비자 보호에 관한 법률」에 따라 
-              환불이 처리됩니다. 환불 요청은 tears0427@gmail.com으로 문의해주세요.
+              환불이 처리됩니다. 상세한 환불 규정은 <a href="/refund" className="text-primary hover:underline">환불 규정 페이지</a>에서 확인하실 수 있습니다. 
+              환불 요청은 tears0427@gmail.com으로 문의해주세요.
             </p>
           </div>
           <div className="space-y-2">

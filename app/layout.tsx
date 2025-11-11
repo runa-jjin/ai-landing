@@ -51,12 +51,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div className="container mx-auto max-w-7xl px-6">
                 <div className="flex flex-col md:flex-row justify-between items-center gap-4">
                   <div>© {new Date().getFullYear()} 랜딩페이지 문구 생성기. All rights reserved.</div>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 flex-wrap justify-center">
                     <a href="/privacy" className="hover:text-slate-300 transition-colors">
                       개인정보처리방침
                     </a>
                     <a href="/terms" className="hover:text-slate-300 transition-colors">
                       이용약관
+                    </a>
+                    <a href="/refund" className="hover:text-slate-300 transition-colors">
+                      환불 규정
                     </a>
                   </div>
                 </div>
