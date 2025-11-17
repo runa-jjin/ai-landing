@@ -71,7 +71,7 @@ function SignInContent() {
   }
 
   return (
-    <section className="space-y-8">
+    <section className="space-y-8 pt-24">
       {/* 서비스 소개 섹션 */}
       <div className="card space-y-4">
         <div className="text-center">

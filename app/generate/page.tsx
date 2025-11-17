@@ -136,41 +136,28 @@ export default function GeneratePage() {
           <h2 className="text-2xl font-bold text-white">❓ 자주 묻는 질문 (FAQ)</h2>
         <div className="space-y-4">
           <div className="space-y-2">
-            <h3 className="font-semibold text-slate-100">Q1. 무료로 몇 번까지 사용할 수 있나요?</h3>
-            <p className="text-sm text-slate-300">
-              무료 플랜은 월 3회까지 문구를 생성할 수 있습니다. 추가 사용이 필요하시면 프로 요금제(월 ₩19,000)로 업그레이드하시면 무제한으로 사용하실 수 있습니다.
-            </p>
-          </div>
-          <div className="space-y-2">
-            <h3 className="font-semibold text-slate-100">Q2. 생성된 문구의 저작권은 누구에게 있나요?</h3>
+            <h3 className="font-semibold text-slate-100">Q1. 생성된 문구의 저작권은 누구에게 있나요?</h3>
             <p className="text-sm text-slate-300">
               생성된 문구의 저작권은 이용자에게 귀속됩니다. 상업적 목적으로 자유롭게 사용하실 수 있으며, 
               서비스 제공자에 대한 저작권 표시는 선택사항입니다.
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-slate-100">Q3. 생성된 문구를 바로 사용해도 되나요?</h3>
+            <h3 className="font-semibold text-slate-100">Q2. 생성된 문구를 바로 사용해도 되나요?</h3>
             <p className="text-sm text-slate-300">
               생성된 문구는 참고 자료로 활용하시고, 반드시 브랜드에 맞게 수정 및 검토하신 후 사용하시기 바랍니다. 
               법적 적합성, 정확성, 완전성에 대한 최종 책임은 이용자에게 있습니다.
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-slate-100">Q4. 어떤 업종에 사용할 수 있나요?</h3>
+            <h3 className="font-semibold text-slate-100">Q3. 어떤 업종에 사용할 수 있나요?</h3>
             <p className="text-sm text-slate-300">
               모든 업종에서 사용 가능합니다. 이커머스, SaaS, 교육, 헬스케어, 금융, 부동산, 
               음식점, 뷰티 등 다양한 업종의 랜딩페이지 문구를 생성할 수 있습니다.
             </p>
           </div>
           <div className="space-y-2">
-            <h3 className="font-semibold text-slate-100">Q5. 프로 요금제는 어떻게 결제하나요?</h3>
-            <p className="text-sm text-slate-300">
-              카카오페이를 통해 간편하게 결제하실 수 있습니다. 결제 후 이메일로 입금 정보를 보내주시면 
-              24시간 내 계정이 업그레이드됩니다. 자세한 내용은 <a href="/payment-info" className="text-primary hover:underline">결제 안내</a> 페이지를 참고하세요.
-            </p>
-          </div>
-          <div className="space-y-2">
-            <h3 className="font-semibold text-slate-100">Q6. 환불이 가능한가요?</h3>
+            <h3 className="font-semibold text-slate-100">Q4. 환불이 가능한가요?</h3>
             <p className="text-sm text-slate-300">
               이용 시작 전에만 환불이 가능합니다. 「전자상거래 등에서의 소비자 보호에 관한 법률」에 따라 
               환불이 처리됩니다. 문의사항은 tears0427@gmail.com으로 연락주세요.
