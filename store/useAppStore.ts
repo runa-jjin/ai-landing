@@ -15,6 +15,7 @@ interface AppState {
   error: string | null;
   activeTab: TabKey;
   isPaywallOpen: boolean;
+  isUpgradePromptOpen: boolean;
   setFormField: <K extends keyof CopyInput>(key: K, value: CopyInput[K]) => void;
   setForm: (value: CopyInput) => void;
   setResult: (value: CopyOutput | null) => void;
@@ -24,6 +25,7 @@ interface AppState {
   setError: (value: string | null) => void;
   setActiveTab: (tab: TabKey) => void; 
   setPaywallOpen: (value: boolean) => void;
+  setUpgradePromptOpen: (value: boolean) => void;
   reset: () => void; 
 }
 
@@ -47,8 +49,9 @@ export const useAppStore = create<AppState>()(
       usageCount: 0,
       planType: 'free',
       error: null,
-      activeTab: "result",
+      activeTab: "preview",
       isPaywallOpen: false,
+      isUpgradePromptOpen: false,
       setFormField: (key, value) =>
         set((state) => ({
           form: {
@@ -64,6 +67,7 @@ export const useAppStore = create<AppState>()(
       setError: (value) => set({ error: value }),
       setActiveTab: (tab) => set({ activeTab: tab }), 
       setPaywallOpen: (value) => set({ isPaywallOpen: value }),
+      setUpgradePromptOpen: (value) => set({ isUpgradePromptOpen: value }),
       reset: () => set({ form: defaultForm, result: null, error: null })
     }),
     {

@@ -1,7 +1,7 @@
 // Supabase DB 기반 사용량 관리
 import { supabaseAdmin } from './supabase';
 
-export const USAGE_LIMIT = 3;
+export const USAGE_LIMIT = 10;
 
 // 메모리 폴백 (Supabase 실패 시)
 const userUsageMemory = new Map<string, number>();

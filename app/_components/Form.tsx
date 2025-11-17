@@ -1,6 +1,8 @@
 "use client";
 
 import { FormEvent, useEffect, useState, useTransition } from "react";
+import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import { generateCopy } from "@/app/actions/generateCopy";
 import { getUsageInfo } from "@/app/actions/getUserUsage";
 import { copyInputSchema, industries, tones, languages, CopyInput } from "@/lib/schema";
@@ -50,7 +52,9 @@ export function Form() {
     setActiveTab,
     isGenerating,
     setPaywallOpen,
-    setPlanType
+    setPlanType,
+    isUpgradePromptOpen,
+    setUpgradePromptOpen
   } = useAppStore();
   const [isPending, startTransition] = useTransition();
   const [usageInfo, setUsageInfo] = useState({
@@ -67,8 +71,13 @@ export function Form() {
     getUsageInfo().then((info) => {
       setUsageInfo(info);
       setPlanType(info.planType);
+      
+      // 5회 사용 시 업그레이드 팝업 표시
+      if (info.planType === 'free' && info.used === 5 && !isUpgradePromptOpen) {
+        setUpgradePromptOpen(true);
+      }
     });
-  }, [setPlanType]);
+  }, [setPlanType, isUpgradePromptOpen, setUpgradePromptOpen]);
 
   // 생성 후 사용량 새로고침
   const refreshUsage = async () => {
@@ -110,7 +119,7 @@ export function Form() {
         }
         setResult(response.data);
         await refreshUsage(); // 사용량 새로고침
-        setActiveTab("result");
+        setActiveTab("preview");
       } catch (error) {
         console.error(error);
         setError("생성 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."); 
@@ -124,11 +133,66 @@ export function Form() {
     setForm(seeds[key]);
   };
 
+  const router = useRouter();
+
+  // 5회 사용 시 업그레이드 팝업
+  const upgradePromptModal =
+    isUpgradePromptOpen &&
+    typeof document !== "undefined" &&
+    createPortal(
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="유료 전환 안내"
+        className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 px-4"
+      >
+        <div className="card max-w-md space-y-4 text-center">
+          <h3 className="text-xl font-semibold">무료 사용량 절반 사용 완료</h3>
+          <p className="text-sm text-slate-300">
+            무료 체험 10회 중 5회를 사용하셨습니다.
+            <br />
+            유료 플랜으로 전환하시면 무제한으로 사용하실 수 있습니다.
+          </p>
+          <div className="rounded-lg bg-slate-800/50 p-4 text-left text-sm space-y-2">
+            <p className="font-semibold text-primary">💳 유료 플랜 전환</p>
+            <p className="text-slate-300">
+              유료 전환을 원하시면 아래 이메일로 문의해주세요.
+            </p>
+            <p className="text-xs text-slate-400">
+              📧 <a href="mailto:tears0427@gmail.com" className="text-primary hover:underline">tears0427@gmail.com</a>
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              type="button"
+              aria-label="문의하기"
+              className="flex-1 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/40 hover:-translate-y-0.5 transition-transform"
+              onClick={() => {
+                setUpgradePromptOpen(false);
+                router.push("/contact");
+              }}
+            >
+              문의 남기기
+            </button>
+            <button
+              type="button"
+              aria-label="닫기"
+              className="flex-1 rounded-lg border border-slate-700 px-4 py-2 text-sm font-semibold text-slate-200 transition-colors hover:bg-slate-800"
+              onClick={() => setUpgradePromptOpen(false)}
+            >
+              닫기
+            </button>
+          </div>
+        </div>
+      </div>,
+      document.body
+    );
+
   return (
     <form onSubmit={handleSubmit} className="card space-y-6" aria-label="카피 생성 입력 폼">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-semibold">브리프 입력</h2>
+          <h2 className="text-xl font-semibold">내용 입력</h2>
           <p className="text-sm text-slate-400">
             {usageInfo?.isAuthenticated 
               ? usageInfo?.planType === 'pro'
@@ -305,6 +369,7 @@ export function Form() {
           {isGenerating || isPending ? "생성 중..." : !usageInfo?.isAuthenticated ? "로그인 필요" : "즉시 생성"}
         </button>
       </div>
+      {upgradePromptModal}
     </form>
   );
 }

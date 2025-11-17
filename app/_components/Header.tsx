@@ -20,8 +20,8 @@ export function Header() {
             className="h-10 w-auto"
             priority
           />
-          <div className="text-2xl font-bold gradient-text">
-            랜딩페이지 문구 자동 생성기
+          <div className="text-2xl font-bold text-white">
+            BrandVoice AI
           </div>
         </Link>
         {/* 네비게이션 메뉴 */}
@@ -34,11 +34,6 @@ export function Header() {
           <li>
             <a href="/generate" className="hover:text-blue-300 transition-colors">
               생성하기
-            </a>
-          </li>
-          <li>
-            <a href="/pricing" className="hover:text-blue-300 transition-colors">
-              요금제
             </a>
           </li>
           {status === "loading" ? (

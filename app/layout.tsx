@@ -5,15 +5,29 @@ import { Providers } from "./providers";
 import { Header } from "./_components/Header";
 import { StarryBackground } from "./_components/StarryBackground";
 
+const getMetadataBaseUrl = (): URL | undefined => {
+  try {
+    if (process.env.NEXTAUTH_URL) {
+      return new URL(process.env.NEXTAUTH_URL);
+    }
+    if (process.env.VERCEL_URL) {
+      return new URL(`https://${process.env.VERCEL_URL}`);
+    }
+    return undefined;
+  } catch (error) {
+    console.warn('[layout] Failed to create metadataBase URL:', error);
+    return undefined;
+  }
+};
+
+const metadataBaseUrl = getMetadataBaseUrl();
+
 export const metadata: Metadata = {
   title: "랜딩페이지 문구 자동 생성기 | AI 카피라이팅",
-  description: "AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다. 무료 체험 3회 제공. Google 로그인으로 간편하게 시작하세요.",
+  description: "AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다. 무료 체험 10회 제공. Google 로그인으로 간편하게 시작하세요.",
   keywords: ["랜딩페이지", "카피라이팅", "AI", "문구 생성", "마케팅", "브랜딩"],
   authors: [{ name: "랜딩페이지 문구 생성기" }],
-  metadataBase: new URL(process.env.NEXTAUTH_URL || "http://localhost:3000"),
-  icons: {
-    icon: "/favicon.ico",
-  },
+  ...(metadataBaseUrl && { metadataBase: metadataBaseUrl }),
   openGraph: {
     title: "랜딩페이지 문구 자동 생성기",
     description: "AI가 자동으로 브랜드에 맞는 랜딩페이지 문구를 생성합니다.",
@@ -22,6 +36,12 @@ export const metadata: Metadata = {
   other: {
     "google-adsense-account": "ca-pub-5471299059563255",
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -41,9 +41,8 @@ export default function GeneratePage() {
       </div>
 
       {/* 메인 컨텐츠 섹션 */}
-      <div className="relative z-10 container mx-auto max-w-7xl px-6 pb-16">
-      <div className="grid gap-8 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] mt-4"> 
-        <div className="space-y-6">
+      <div className="relative z-10 container mx-auto max-w-4xl px-6 pb-16">
+        <div className="space-y-8 mt-4">
           <Form />
           {error && (
             <div
@@ -54,7 +53,37 @@ export default function GeneratePage() {
               {error}
             </div>
           )}
-          {/* 세로형 광고 (300x250) - 폼 영역 하단 */}
+          
+          {/* 결과 표시 영역 */}
+          <div className="space-y-4">
+            <div className="flex gap-2" role="tablist" aria-label="결과 및 미리보기 탭">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === "preview"}
+                onClick={() => setActiveTab("preview")} 
+                className={`tab-button ${activeTab === "preview" ? "tab-button-active" : ""}`}
+              >
+                미리보기
+              </button>
+              <button
+                type="button"
+                role="tab"
+                aria-selected={activeTab === "result"}
+                onClick={() => setActiveTab("result")}
+                className={`tab-button ${activeTab === "result" ? "tab-button-active" : ""}`}
+              >
+                결과 카드
+              </button>
+            </div>
+            <div>
+              <Suspense fallback={<LoadingPlaceholder />}>
+                {activeTab === "preview" ? <Preview result={result} /> : <ResultCards result={result} />}
+              </Suspense>
+            </div>
+          </div>
+
+          {/* 세로형 광고 (300x250) - 결과 영역 하단 */}
           <div className="flex justify-center">
             <KakaoAdFit 
               unitId={process.env.NEXT_PUBLIC_KAKAO_ADFIT_SIDEBAR || "DAN-5abS5b0GyYPFBVzF"} 
@@ -63,34 +92,6 @@ export default function GeneratePage() {
             />
           </div>
         </div>
-        <div className="space-y-4">
-          <div className="flex gap-2" role="tablist" aria-label="결과 및 미리보기 탭">
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === "result"}
-              onClick={() => setActiveTab("result")}
-              className={`tab-button ${activeTab === "result" ? "tab-button-active" : ""}`}
-            >
-              결과 카드
-            </button>
-            <button
-              type="button"
-              role="tab"
-              aria-selected={activeTab === "preview"}
-              onClick={() => setActiveTab("preview")} 
-              className={`tab-button ${activeTab === "preview" ? "tab-button-active" : ""}`}
-            >
-              미리보기
-            </button>
-          </div>
-          <div>
-            <Suspense fallback={<LoadingPlaceholder />}>
-              {activeTab === "preview" ? <Preview result={result} /> : <ResultCards result={result} />}
-            </Suspense>
-          </div>
-        </div>
-      </div>
       </div>
 
       {/* 사용 가이드 섹션 */}
