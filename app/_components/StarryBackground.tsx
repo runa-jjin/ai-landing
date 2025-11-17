@@ -23,8 +23,8 @@ export function StarryBackground() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    // 요금제 페이지에서는 배경을 표시하지 않음
-    if (pathname === "/pricing") {
+    // 메인 페이지, 생성 페이지, 요금제 페이지에서는 배경을 표시하지 않음
+    if (pathname === "/" || pathname === "/generate" || pathname === "/pricing") {
       return;
     }
 
